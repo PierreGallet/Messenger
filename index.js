@@ -9,7 +9,7 @@ var express = require('express');
 var app = express();
 var config = require('./config');
 var mainCtrl = require('./controller/main-controller');
-var buttonCtrl = require('./controller/button-controller')
+var buttonCtrl = require('./controller/button-controller');
 
 // Use morgan to print logs
 var morgan  = require('morgan');

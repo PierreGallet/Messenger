@@ -1,5 +1,6 @@
 var config = require('../config');
 var request = require('request');
+var buttonCtrl = require('./button-controller');
 
 
 function receivedMessage(event) {
@@ -40,7 +41,16 @@ function receivedMessage(event) {
             break;
 
             default:
-                sendTextMessage(senderID, messageText);
+                //sendTextMessage(senderID, messageText);
+                buttonCtrl.sendProposals(senderID, messageText, [{
+                    "content_type":"text",
+                    "title":"Red", 
+                    "payload":"PAYLOAD_FOR_PICKING_RED"},
+                    {"content_type":"text", 
+                     "title":"Blue", 
+                     "payload":"PAYLOAD_FOR_PICKING_BLUE"}
+                ]);
+                
         }
     } else if (messageAttachments) {
             sendTextMessage(senderID, "Message with attachment received");
@@ -87,8 +97,7 @@ function callSendAPI(messageData) {
         console.log("Successfully sent generic message with id %s to recipient %s", messageId, recipientId);
         } else {
             console.error("Unable to send message.");
-            //console.error(response);
-            console.log('RESPONSE');
+            console.error(response);
             console.error(error);
         }
     });  
