@@ -116,6 +116,10 @@ function receivedMessage(event) {
     }
 }
 
+function receivedDeliveryConfirmation(messagingEvent) {
+
+}
+
 function sendTextMessage(recipientId, messageText) {
     var messageData = {
         recipient: {
@@ -149,8 +153,6 @@ function callSendAPI(messageData) {
         }
     });  
 }
-
-function receivedDeliveryConfirmation(messagingEvent) {}
 
 app.listen(config.port, function () {
     console.log('Example app listening on port 8888!');
