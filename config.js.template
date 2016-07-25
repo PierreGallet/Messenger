@@ -1,0 +1,7 @@
+var config = {};
+
+config.access_token = "";
+config.ngrok_url = "";
+config.port = 8888;
+
+module.exports = config;
