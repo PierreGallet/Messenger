@@ -15,7 +15,7 @@ var config = require('./config');
 
 app.get('/', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
-      req.query['hub.verify_token'] === config.access_token) {
+      req.query['hub.verify_token'] === config.verify_token) {
     console.log("Validating webhook");
     res.status(200).send(req.query['hub.challenge']);
   } else {
@@ -26,7 +26,8 @@ app.get('/', function(req, res) {
 
 app.post('/', function (req, res) {
   var data = req.body;
-    console.log('ATTA J AI RECU UN TRUC')
+    console.log(req);
+    console.log(req.body);
 
   // Make sure this is a page subscription
   if (data.object == 'page') {
@@ -122,7 +123,7 @@ function sendTextMessage(recipientId, messageText) {
 function callSendAPI(messageData) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: EAAHYHgKj4SgBALaeFlN76gZC2PZBqZB2TXEQ96HSm3C4JcS32DFHwZCkXl86n },
+    qs: { access_token: config.acces_token },
     method: 'POST',
     json: messageData
 
