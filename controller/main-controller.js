@@ -2,6 +2,34 @@ var config = require('../config');
 var request = require('request');
 var buttonCtrl = require('./button-controller');
 
+function gettingStarted() {
+    var messageData = {
+        "setting_type":"call_to_actions",
+        "thread_state":"new_thread",
+        "call_to_actions":[ { "payload":"getting_started" } ]
+    };
+    
+    request({
+        uri: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: { access_token: config.access_token },
+        method: 'POST',
+        json: messageData
+
+    }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+        var recipientId = body.recipient_id;
+        var messageId = body.message_id;
+
+        console.log("Successfully sent Getting Started with id %s to recipient %s", messageId, recipientId);
+        } else {
+            console.error("Unable to send Getting Started.");
+            console.error(response);
+            console.error(error);
+        }
+    });
+    
+    
+}
 
 function receivedMessage(event) {
     var senderID = event.sender.id;
@@ -85,7 +113,7 @@ function sendTextMessage(recipientId, messageText) {
 function callSendAPI(messageData) {
     request({
         uri: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: { access_token: config.acces_token },
+        qs: { access_token: config.access_token },
         method: 'POST',
         json: messageData
 
@@ -111,3 +139,4 @@ exports.receivedDeliveryConfirmation = receivedDeliveryConfirmation;
 exports.receivedMessage = receivedMessage;
 exports.receivedAuthentication = receivedAuthentication;
 exports.receivedPostback = receivedPostback;
+exports.gettingStarted = gettingStarted;

@@ -22,7 +22,7 @@ function sendProposals(recipientId, messageText, proposals) {
     
     request({
         uri: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: { access_token: config.acces_token },
+        qs: { access_token: config.access_token },
         method: 'POST',
         json: messageData
 
@@ -32,6 +32,7 @@ function sendProposals(recipientId, messageText, proposals) {
             var messageId = body.message_id;
 
             console.log("Successfully sent multiple choices message message with id %s to recipient %s", messageId, recipientId);
+            console.log(response.body);
         } else { console.error(error) }
     });
 }
