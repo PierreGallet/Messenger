@@ -9,6 +9,16 @@ var express = require('express');
 var app = express();
 var config = require('./config');
 
+// Use morgan to print logs
+var morgan  = require('morgan');
+app.use( morgan('combined') );
+
+var bodyParser = require('body-parser')
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+
 /*app.get('/', function (req, res) {
   res.send('Hello World!');
 });*/
@@ -25,12 +35,12 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function (req, res) {
-  var data = req.body;
-    console.log(req);
+  //var data = req.body;
     console.log(req.body);
+    //console.log(req.body);
 
   // Make sure this is a page subscription
-  if (data.object == 'page') {
+  /*if (data.object == 'page') {
     // Iterate over each entry
     // There may be multiple if batched
     data.entry.forEach(function(pageEntry) {
@@ -51,14 +61,14 @@ app.post('/', function (req, res) {
           console.log("Webhook received unknown messagingEvent: ", messagingEvent);
         }
       });
-    });
+    });*/
 
     // Assume all went well.
     //
     // You must send back a 200, within 20 seconds, to let us know you've 
     // successfully received the callback. Otherwise, the request will time out.
     res.sendStatus(200);
-  }
+  //}
 });
 
 function receivedMessage(event) {
