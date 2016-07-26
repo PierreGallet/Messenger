@@ -1,3 +1,6 @@
+/*
+ * This controller prints multiple choices answers with buttons to the talking user.
+ */
 var config = require('../config');
 var request = require('request');
 

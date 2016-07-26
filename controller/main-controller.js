@@ -1,6 +1,12 @@
+/*
+ * Defines all de functions used to parse incoming Jsons and ignite answers.
+ */
+
 var config = require('../config');
 var request = require('request');
 var buttonCtrl = require('./button-controller');
+var pythonCtrl = require('./python-controller');
+
 
 function gettingStarted() {
     var messageData = {
@@ -70,14 +76,16 @@ function receivedMessage(event) {
 
             default:
                 //sendTextMessage(senderID, messageText);
-                buttonCtrl.sendProposals(senderID, messageText, [{
+                /*buttonCtrl.sendProposals(senderID, messageText, [{
                     "content_type":"text",
                     "title":"Red", 
                     "payload":"PAYLOAD_FOR_PICKING_RED"},
                     {"content_type":"text", 
                      "title":"Blue", 
                      "payload":"PAYLOAD_FOR_PICKING_BLUE"}
-                ]);
+                ]);*/
+                pythonCtrl.talkToPython(messageText);
+                sendTextMessage(senderID, "Done");
                 
         }
     } else if (messageAttachments) {
