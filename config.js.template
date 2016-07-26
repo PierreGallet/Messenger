@@ -5,4 +5,6 @@ config.access_token = "";
 config.ngrok_url = "";
 config.port = 8888;
 
+config.pythonScriptsPath = "./machine_learning_test/";
+
 module.exports = config;
