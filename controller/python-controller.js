@@ -6,11 +6,12 @@
 var config = require('../config');
 var pshell = require('python-shell');
 
-function parsingJSON(json) {
-    
+function parsingJSON(json, recipientID ,callback) {
+    console.log(json);
+    callback("text", json.ok.toString(), recipientID);
 }
 
-function talkToPython(inputStr) {
+function talkToPython(inputStr, senderID, callback) {
     
     console.log('LAUNCHED');
     
@@ -27,10 +28,9 @@ function talkToPython(inputStr) {
         console.log('results: %j', results);
         
         var str = "";
-        results.forEach(function(element){str = str + element;})
-        
-        json = JSON.parse(str);
-        parsingJSON(json);
+        results.forEach(function(element){str = str + element;});
+
+        parsingJSON(JSON.parse(str), senderID, callback);
         
     });
     

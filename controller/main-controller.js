@@ -84,8 +84,7 @@ function receivedMessage(event) {
                      "title":"Blue", 
                      "payload":"PAYLOAD_FOR_PICKING_BLUE"}
                 ]);*/
-                pythonCtrl.talkToPython(messageText);
-                sendTextMessage(senderID, "Done");
+                pythonCtrl.talkToPython(messageText, senderID, sendPythonResponse);
                 
         }
     } else if (messageAttachments) {
@@ -105,6 +104,21 @@ function receivedAuthentication(messagingEvent) {
     
 }
 
+
+function sendPythonResponse(type, output, recipientID) {
+
+    if ( type == "text" ) {
+        sendTextMessage(recipientID, output);
+    }
+
+    else if ( type == "button" ) {
+
+    }
+
+    else {
+
+    }
+}
 
 function sendTextMessage(recipientId, messageText) {
     var messageData = {
