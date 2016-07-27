@@ -5,13 +5,13 @@ import json, re, sys
 
 if __name__ == '__main__':
 
-    input = sys.argv[1].lower()
+    text = sys.argv[1].lower()
     res = { "ok" : True }
 
-    if input in ['bonjour', 'salut']:
+    if text in ['bonjour', 'salut']:
         res["type"] = "greetings"
 
-    elif re.match( r"^je m'appelle (.*)", input ):
+    elif re.match( r"^je m'appelle (.*)", text ):
         res["type"] = "introduction"
         res["info"] = {}
 
