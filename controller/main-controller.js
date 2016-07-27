@@ -51,7 +51,11 @@ function receivedMessage(event) {
     // You may get a text or attachment but not both
     var messageText = message.text;
     var messageAttachments = message.attachments;
-
+    
+    /*if (payload) {
+        buttonCtrl.payloadAnalyser(event);
+    }*/ 
+    
     if (messageText) {
 
         // If we receive a text message, check to see if it matches any special

@@ -10,7 +10,7 @@ function parsingJSON(json, recipientID ,callback) {
     console.log(json);
     
     if(!json.ok) {
-        callback("text", "Deso, pas compris, réessaye", recipientID);
+        callback("text", "Nous n'avons pas compris votre message, pouvez-vous le reformuler s'il vous plaît.", recipientID);
     }
     else if(json.intent == "greetings") {
         callback("text", "Bonjour, que pouvons-nous faire pour vous?", recipientID);
@@ -38,7 +38,17 @@ function parsingJSON(json, recipientID ,callback) {
         }
     }
     else {
-        callback("text", "Deso je c pa koi fér, patapé", recipientID);
+        var output = {}
+            output.text = "Est-ce bien votre intent : " + json.intent + "?";
+            output.proposals = [{
+                    "content_type":"text",
+                    "title":"Oui", 
+                    "payload":"payloadOuiIntent"},
+                    {"content_type":"text", 
+                     "title":"Non", 
+                     "payload":"payloadNonIntent"}
+                ];
+        callback("button", output, recipientID);
     }
 }
 

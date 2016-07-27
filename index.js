@@ -40,7 +40,6 @@ app.get('/', function(req, res) {
 
 app.post('/', function (req, res) {
     var data = req.body;
-
     // Make sure this is a page subscription
     if (data.object == 'page') {
     // Iterate over each entry

@@ -40,6 +40,29 @@ function sendProposals(recipientId, messageText, proposals) {
     });
 }
 
+function payloadAnalyser() {
+    
+    if (payload == "payloadOuiGiveInfos") {
+        // sauvegarder informations 
+        // Envoyer acknowledgment
+    }
+    else if (payload == "payloadNonGiveInfos") {
+        // Envoyer acknowledgment
+    } 
+    else if (payload == "payloadOuiIntent") {
+        // Transmet l'information à python
+        // Transmet la solution python à l'utilisateur
+    }
+    else if (payload = "payloadNonIntent") {
+        // Transmet l'info à python
+        // Demande à l'utilisateur de reformuler son message
+    }
+    else {
+        // Message d'erreur pour payload non connu
+    }
+}
+
 var exports = module.exports = {};
 
 exports.sendProposals = sendProposals;
+exports.payloadAnalyser = payloadAnalyser;
