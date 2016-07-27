@@ -8,7 +8,19 @@ var pshell = require('python-shell');
 
 function parsingJSON(json, recipientID ,callback) {
     console.log(json);
-    callback("text", json.ok.toString(), recipientID);
+    
+    if(!json.ok) {
+        callback("text", "Deso, pas compris, réessaye", recipientID);
+    }
+    else if(json.intent = "greetings") {
+        callback("text", "Bonjour, que pouvons-nous faire pour vous?", recipientID);
+    }
+    else if(json.intent='give-info') {
+        callback("text", "Nous enregistrons vos informations (ToDo)", recipientID);
+    }
+    else {
+        callback("text", "Deso je c pa koi fér, patapé");
+    }
 }
 
 function talkToPython(inputStr, senderID, callback) {
