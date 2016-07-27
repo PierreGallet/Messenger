@@ -12,14 +12,33 @@ function parsingJSON(json, recipientID ,callback) {
     if(!json.ok) {
         callback("text", "Deso, pas compris, réessaye", recipientID);
     }
-    else if(json.intent = "greetings") {
+    else if(json.intent == "greetings") {
         callback("text", "Bonjour, que pouvons-nous faire pour vous?", recipientID);
     }
-    else if(json.intent='give-info') {
-        callback("text", "Nous enregistrons vos informations (ToDo)", recipientID);
+    else if(json.intent == 'give_info') {
+        var mail = json.entities.email
+        var phone = json.entities.phone_number
+        var str = ""
+        
+        if(mail && !isSetMail()) { str = str + "Adresse email : " + mail + ". \n\n";}
+        if(phone && !isSetPhone()) { str = str + "Telephone : " + phone + ". \n\n";}
+        
+        if(mail || phone) {
+            var output = {}
+            output.text = "Vous nous avez transmis les informations suivantes : \n\n" + str + "Confirmez-vous ces informations?";
+            output.proposals = [{
+                    "content_type":"text",
+                    "title":"Oui", 
+                    "payload":"payloadOuiGiveInfos"},
+                    {"content_type":"text", 
+                     "title":"Non", 
+                     "payload":"payloadNonGiveInfos"}
+                ];
+            callback("button", output, recipientID);
+        }
     }
     else {
-        callback("text", "Deso je c pa koi fér, patapé");
+        callback("text", "Deso je c pa koi fér, patapé", recipientID);
     }
 }
 
@@ -47,6 +66,22 @@ function talkToPython(inputStr, senderID, callback) {
         
     });
     
+}
+
+function isSetPhone() {
+    /*
+     * Tells if phone number had been set by user
+     */
+    
+    return false;
+}
+
+function isSetMail() {
+    /*
+     * Tells if mails had been set by user
+     */
+    
+    return false;
 }
 
 var exports = module.exports = {};
