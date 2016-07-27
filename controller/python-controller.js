@@ -17,6 +17,7 @@ function talkToPython(inputStr, senderID, callback) {
     
     var options = {
         mode: 'text',
+        pythonPath: '/usr/bin/python2',
         pythonOptions: ['-u'],
         scriptPath: config.pythonScriptsPath,
         args: [inputStr]
