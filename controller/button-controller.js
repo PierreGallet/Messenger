@@ -53,25 +53,25 @@ function payloadAnalyser(event, sendMessage) {
     
     if (payload == "payloadOuiGiveInfos") {
         
-        // sauvegarder informations 
-        //console.log('WORKING' + " ... " + payload + "..." + recipientId + "..." + config.access_token);
-        sendMessage(senderId, "Nous avons enregistré les modifications.");
+        // TODO : sauvegarder informations 
+        sendMessage(senderId, "Nous avons enregistré vos informations.");
 
     }
     else if (payload == "payloadNonGiveInfos") {
-        //sendMessage(recipientID, "Vos informations n'ont pas été enregistrées.");
-        console.log('WORKING');
+        // TODO : sendMessage(recipientID, "Vos informations n'ont pas été enregistrées.");
+        sendMessage(senderId, "Vos informations n'ont pas été enregistrées.");
     } 
     else if (payload == "payloadOuiIntent") {
-        // Transmet l'information à python
-        // Transmet la solution python à l'utilisateur
+        // TODO : Transmet l'information à python
+        sendMessage(senderId, "Pouvez-vous nous donner votre adresse mail et numéro de téléphone afin de poursuivre la résolution de votre problème s'il-vous-plaît?");
     }
     else if (payload = "payloadNonIntent") {
-        // Transmet l'info à python
-        // Demande à l'utilisateur de reformuler son message
+        // TODO : Transmet l'info à python
+        sendMessage(senderId, "Excusez-nous, pouvez-vous reformuler votre question s'il-vous-plaît.");
     }
     else {
         // Message d'erreur pour payload non connu
+        sendMessage(senderId, "DEV ERROR : question non encore implémentée ou payload non reconnu.");
     }
 }
 
