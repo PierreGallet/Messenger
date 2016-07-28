@@ -1,8 +1,10 @@
 /*
  * This controller prints multiple choices answers with buttons to the talking user.
  */
+
 var config = require('../config');
 var request = require('request');
+
 
 function sendProposals(recipientId, messageText, proposals) {
     
@@ -40,14 +42,25 @@ function sendProposals(recipientId, messageText, proposals) {
     });
 }
 
-function payloadAnalyser() {
+function payloadAnalyser(event, sendMessage) {
+    
+    var senderId = event.sender.id;
+    var recipientId = event.recipient.id;
+    var timeOfMessage = event.timestamp;
+    var message = event.message;
+    
+    var payload = message.quick_reply.payload;
     
     if (payload == "payloadOuiGiveInfos") {
+        
         // sauvegarder informations 
-        // Envoyer acknowledgment
+        //console.log('WORKING' + " ... " + payload + "..." + recipientId + "..." + config.access_token);
+        sendMessage(senderId, "Nous avons enregistré les modifications.");
+
     }
     else if (payload == "payloadNonGiveInfos") {
-        // Envoyer acknowledgment
+        //sendMessage(recipientID, "Vos informations n'ont pas été enregistrées.");
+        console.log('WORKING');
     } 
     else if (payload == "payloadOuiIntent") {
         // Transmet l'information à python

@@ -2,6 +2,8 @@
  * Defines all de functions used to parse incoming Jsons and ignite answers.
  */
 
+'use strict';
+
 var config = require('../config');
 var request = require('request');
 var buttonCtrl = require('./button-controller');
@@ -52,12 +54,9 @@ function receivedMessage(event) {
     var messageText = message.text;
     var messageAttachments = message.attachments;
     
-    if (messageText == "oui" || messageText == "Oui") {
-        askForInformation(senderID);
-    }
-    else if (messageText == "non" || messageText == "Non") {
-            sendTextMessage(senderID, "Pouvez-vous reformuler votre problème s'il vous plaît ?");
-        }
+    if (message.quick_reply) {
+        buttonCtrl.payloadAnalyser(event, sendTextMessage);
+    } 
     else if (messageText) {
 
         // If we receive a text message, check to see if it matches any special
@@ -81,15 +80,6 @@ function receivedMessage(event) {
             break;
 
             default:
-                //sendTextMessage(senderID, messageText);
-                /*buttonCtrl.sendProposals(senderID, messageText, [{
-                    "content_type":"text",
-                    "title":"Red", 
-                    "payload":"PAYLOAD_FOR_PICKING_RED"},
-                    {"content_type":"text", 
-                     "title":"Blue", 
-                     "payload":"PAYLOAD_FOR_PICKING_BLUE"}
-                ]);*/
                 pythonCtrl.talkToPython(messageText, senderID, sendPythonResponse);
                 
         }
@@ -99,19 +89,19 @@ function receivedMessage(event) {
 }
 
 function receivedDeliveryConfirmation(messagingEvent) {
-
+    // To be defined
 }
 
 function receivedPostback(messagingEvent) {
-    
+    // To be defined
 }
 
 function receivedAuthentication(messagingEvent) {
-    
+    // To be defined
 }
 
 
-function sendPythonResponse(type, output, recipientID) {
+var sendPythonResponse = function(type, output, recipientID) {
 
     if ( type == "text" ) {
         sendTextMessage(recipientID, output);
@@ -139,8 +129,10 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 function callSendAPI(messageData) {
+    console.log(messageData);
+
     request({
-        uri: 'https://graph.facebook.com/v2.6/me/messages',
+        uri: "https://graph.facebook.com/v2.6/me/messages",
         qs: { access_token: config.access_token },
         method: 'POST',
         json: messageData
@@ -153,8 +145,8 @@ function callSendAPI(messageData) {
         console.log("Successfully sent generic message with id %s to recipient %s", messageId, recipientId);
         } else {
             console.error("Unable to send message.");
-            //console.error(response);
-            console.error(error);
+            console.error(response.body);
+            //console.error(error);
         }
     });  
 }
