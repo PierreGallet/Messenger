@@ -1,8 +1,10 @@
 /*
  * This controller prints multiple choices answers with buttons to the talking user.
  */
+
 var config = require('../config');
 var request = require('request');
+var mainCtrl = require('./main-controller');
 
 function sendProposals(recipientId, messageText, proposals) {
     
@@ -40,14 +42,57 @@ function sendProposals(recipientId, messageText, proposals) {
     });
 }
 
-function payloadAnalyser() {
+function payloadAnalyser(event, sendMessage) {
+    
+    console.log("EVENT" + event);
+    
+    var senderId = event.sender.id;
+    var recipientId = event.recipient.id;
+    var timeOfMessage = event.timestamp;
+    var message = event.message;
+    
+    var payload = message.quick_reply.payload;
     
     if (payload == "payloadOuiGiveInfos") {
+        
         // sauvegarder informations 
-        // Envoyer acknowledgment
+        console.log('WORKING' + " ... " + payload + "..." + recipientId + "..." + config.access_token);
+        console.log("COntroller" + mainCtrl);
+        console.log("FUNCTION" + mainCtrl.sendTextMessage);
+        /*var messageData = {
+            recipient: {
+                id: 535023013364135
+            },
+            message: {
+                text: "Nous avons enregistré les modifications."
+            }
+        };
+        console.log(messageData);
+        request({
+            uri: 'https://graph.facebook.com/v2.6/me/messages',
+            qs: { access_token: config.access_token },
+            method: 'POST',
+            json: messageData
+
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+            var recipientId = body.recipient_id;
+            var messageId = body.message_id;
+
+            console.log("Successfully sent generic message with id %s to recipient %s", messageId, recipientId);
+            } else {
+                console.error("Unable to send message.");
+                console.error(response.body);
+                console.error(error);
+            }
+    });  */
+        
+        //sendMessage(535023013364135, "Vos informations ont été enregistrées.");
+        console.log("It came to an end");
     }
     else if (payload == "payloadNonGiveInfos") {
-        // Envoyer acknowledgment
+        //sendMessage(recipientID, "Vos informations n'ont pas été enregistrées.");
+        console.log('WORKING');
     } 
     else if (payload == "payloadOuiIntent") {
         // Transmet l'information à python
