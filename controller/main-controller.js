@@ -129,8 +129,8 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 function callSendAPI(messageData) {
-    console.log("MESSAGEDATA" + messageData);
-    console.log('ACCES TOKEN' + config.access_token);
+    console.log(messageData);
+
     request({
         uri: "https://graph.facebook.com/v2.6/me/messages",
         qs: { access_token: config.access_token },
@@ -145,8 +145,8 @@ function callSendAPI(messageData) {
         console.log("Successfully sent generic message with id %s to recipient %s", messageId, recipientId);
         } else {
             console.error("Unable to send message.");
-            //console.error(response);
-            console.error(error);
+            console.error(response.body);
+            //console.error(error);
         }
     });  
 }

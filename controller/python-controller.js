@@ -16,15 +16,15 @@ function parsingJSON(json, recipientID ,callback) {
         callback("text", "Bonjour, que pouvons-nous faire pour vous?", recipientID);
     }
     else if(json.intent == 'give_info') {
-        var mail = json.entities.email
-        var phone = json.entities.phone_number
-        var str = ""
+        var mail = json.entities.email;
+        var phone = json.entities.phone_number;
+        var str = "";
         
         if(mail && !isSetMail()) { str = str + "Adresse email : " + mail + ". \n\n";}
         if(phone && !isSetPhone()) { str = str + "Telephone : " + phone + ". \n\n";}
         
         if(mail || phone) {
-            var output = {}
+            var output = {};
             output.text = "Vous nous avez transmis les informations suivantes : \n\n" + str + "Confirmez-vous ces informations?";
             output.proposals = [{
                     "content_type":"text",
@@ -38,7 +38,7 @@ function parsingJSON(json, recipientID ,callback) {
         }
     }
     else {
-        var output = {}
+        var output = {};
             output.text = "Est-ce bien votre intent : " + json.intent + "?";
             output.proposals = [{
                     "content_type":"text",
