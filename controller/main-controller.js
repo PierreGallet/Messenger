@@ -52,11 +52,13 @@ function receivedMessage(event) {
     var messageText = message.text;
     var messageAttachments = message.attachments;
     
-    /*if (payload) {
-        buttonCtrl.payloadAnalyser(event);
-    }*/ 
-    
-    if (messageText) {
+    if (messageText == "oui" || messageText == "Oui") {
+        askForInformation(senderID);
+    }
+    else if (messageText == "non" || messageText == "Non") {
+            sendTextMessage(senderID, "Pouvez-vous reformuler votre problème s'il vous plaît ?");
+        }
+    else if (messageText) {
 
         // If we receive a text message, check to see if it matches any special
         // keywords and send back the corresponding example. Otherwise, just echo
@@ -155,6 +157,10 @@ function callSendAPI(messageData) {
             console.error(error);
         }
     });  
+}
+
+function askForInformation(recipientId) {
+    sendTextMessage(recipientId, "Pouvez-vous me fournir votre numéro de téléphone et adresse mail s'il vous plaît ?");
 }
 
 var exports = module.exports = {};
