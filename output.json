@@ -1,0 +1,9 @@
+{
+    "entitees": {
+        "phone_number": "", 
+        "email": ""
+    }, 
+    "intent": "R\u00e9siliation d'offre en cours", 
+    "comprehension": true, 
+    "accuracy": 0.43619336114058926
+}
