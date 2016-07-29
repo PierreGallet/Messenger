@@ -59,7 +59,7 @@ function payloadAnalyser(event, sendMessage) {
     }
     else if (payload == "payloadNonGiveInfos") {
         // TODO : sendMessage(recipientID, "Vos informations n'ont pas été enregistrées.");
-        sendMessage(senderId, "Vos informations n'ont pas été enregistrées.");
+        sendMessage(senderId, "Vos informations n'ont pas été enregistrées. Pouvez vous nous les transmettre à nouveau?");
     } 
     else if (payload == "payloadOuiIntent") {
         // TODO : Transmet l'information à python
