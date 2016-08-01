@@ -6,7 +6,7 @@
 var config = require('../config');
 var pshell = require('python-shell');
 
-function parsingJSON(json, recipientID , callback) {
+function parsingJSON(json, recipientID, callback) {
     console.log(json);
 
     if(!json.ok) {
