@@ -7,24 +7,24 @@ var request = require('request');
 
 
 function sendProposals(recipientId, messageText, proposals) {
-    
+
     var messageData = {
         recipient: {
-        id: recipientId
+            id: recipientId
         },
         message: {
-            text: messageText, 
+            text: messageText,
             quick_replies: proposals
         }
     };
-    
+
     /*
-     * proposals de la forme 
-     * 
+     * proposals de la forme
+     *
      * proposals = [ {"content_type":"text", "title":"Choice", "payload":"PAYLOAD_FOR_PICKING_RED"}, {...}, {...} ]
-     * 
+     *
      */
-    
+
     request({
         uri: 'https://graph.facebook.com/v2.6/me/messages',
         qs: { access_token: config.access_token },
@@ -43,24 +43,23 @@ function sendProposals(recipientId, messageText, proposals) {
 }
 
 function payloadAnalyser(event, sendMessage) {
-    
+
     var senderId = event.sender.id;
     var recipientId = event.recipient.id;
     var timeOfMessage = event.timestamp;
     var message = event.message;
-    
+
     var payload = message.quick_reply.payload;
-    
+
     if (payload == "payloadOuiGiveInfos") {
-        
-        // TODO : sauvegarder informations 
+        // TODO : sauvegarder informations
         sendMessage(senderId, "Nous avons enregistré vos informations.");
 
     }
     else if (payload == "payloadNonGiveInfos") {
         // TODO : sendMessage(recipientID, "Vos informations n'ont pas été enregistrées.");
         sendMessage(senderId, "Vos informations n'ont pas été enregistrées. Pouvez vous nous les transmettre à nouveau?");
-    } 
+    }
     else if (payload == "payloadOuiIntent") {
         // TODO : Transmet l'information à python
         sendMessage(senderId, "Pouvez-vous nous donner votre adresse mail et numéro de téléphone afin de poursuivre la résolution de votre problème s'il-vous-plaît?");

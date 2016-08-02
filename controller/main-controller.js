@@ -16,7 +16,7 @@ function gettingStarted() {
         "thread_state":"new_thread",
         "call_to_actions":[ { "payload":"getting_started" } ]
     };
-    
+
     request({
         uri: 'https://graph.facebook.com/v2.6/me/messages',
         qs: { access_token: config.access_token },
@@ -35,10 +35,11 @@ function gettingStarted() {
             console.error(error);
         }
     });
-    
-    
+
+
 }
 
+//In receivedMessage, we've made logic to send a message back to the user. The default behavior is to use the fonction talktopython.
 function receivedMessage(event) {
     var senderID = event.sender.id;
     var recipientID = event.recipient.id;
@@ -53,10 +54,10 @@ function receivedMessage(event) {
     // You may get a text or attachment but not both
     var messageText = message.text;
     var messageAttachments = message.attachments;
-    
+
     if (message.quick_reply) {
         buttonCtrl.payloadAnalyser(event, sendTextMessage);
-    } 
+    }
     else if (messageText) {
 
         // If we receive a text message, check to see if it matches any special
@@ -81,7 +82,6 @@ function receivedMessage(event) {
 
             default:
                 pythonCtrl.talkToPython(messageText, senderID, sendPythonResponse);
-                
         }
     } else if (messageAttachments) {
             sendTextMessage(senderID, "Message with attachment received");
@@ -100,7 +100,24 @@ function receivedAuthentication(messagingEvent) {
     // To be defined
 }
 
+function sendGenericMessage(senderID) {
+    console.log('hello generic')
+}
 
+function sendImagecMessage(senderID) {
+    console.log('hello image')
+}
+
+function sendButtonMessage(senderID) {
+    console.log('hello button')
+}
+
+function sendReceiptMessage(senderID) {
+    console.log('hello receipt')
+}
+
+
+// on définit la callback de la fonction talkToPython, qui est configurée dans python-controller
 var sendPythonResponse = function(type, output, recipientID) {
 
     if ( type == "text" ) {
@@ -116,6 +133,7 @@ var sendPythonResponse = function(type, output, recipientID) {
     }
 }
 
+// sendTextMessage formats the data in the request
 function sendTextMessage(recipientId, messageText) {
     var messageData = {
         recipient: {
@@ -128,6 +146,7 @@ function sendTextMessage(recipientId, messageText) {
     callSendAPI(messageData);
 }
 
+// callSendAPI calls the Send API
 function callSendAPI(messageData) {
     console.log(messageData);
 
@@ -145,10 +164,10 @@ function callSendAPI(messageData) {
         console.log("Successfully sent generic message with id %s to recipient %s", messageId, recipientId);
         } else {
             console.error("Unable to send message.");
-            console.error(response.body);
-            //console.error(error);
+            console.error(response);
+            console.error(error);
         }
-    });  
+    });
 }
 
 function askForInformation(recipientId) {

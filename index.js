@@ -34,8 +34,8 @@ app.get('/', function(req, res) {
         res.status(200).send(req.query['hub.challenge']);
     } else {
         console.error("Failed validation. Make sure the validation tokens match.");
-        res.sendStatus(403);          
-    }  
+        res.sendStatus(403);
+    }
 });
 
 app.post('/', function (req, res) {
@@ -47,7 +47,7 @@ app.post('/', function (req, res) {
     data.entry.forEach(function(pageEntry) {
         var pageID = pageEntry.id;
         var timeOfEvent = pageEntry.time;
-        
+
         // Iterate over each messaging event
         pageEntry.messaging.forEach(function(messagingEvent) {
         if (messagingEvent.optin) {
@@ -66,12 +66,16 @@ app.post('/', function (req, res) {
 
     // Assume all went well.
     //
-    // You must send back a 200, within 20 seconds, to let us know you've 
+    // You must send back a 200, within 20 seconds, to let us know you've
     // successfully received the callback. Otherwise, the request will time out.
     res.sendStatus(200);
   }
 });
 
+
+// Start server
+// Webhooks must be available via SSL with a certificate signed by a valid
+// certificate authority.
 app.listen(config.port, function () {
     console.log('Example app listening on port 8888!');
 });
