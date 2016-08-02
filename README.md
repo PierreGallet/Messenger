@@ -7,13 +7,13 @@ Frist things first, you should have a look at this page, carefully craft by face
 
 ## 9 steps to victory
 
-Node stuff:
+### Node stuff:
 * We need a *"real url"* for our webhook (meaning not a localhost), because facebook will only accept verified urls. Ngrok is the tool for this purpose. Download ngrok there : https://ngrok.com. Launch the bash script provided and then use `ngrok 8888` to set up an url such as https://55feb1ab.ngrok.io. This will be your reverse proxy for your localhost.
 * Download nodemon with the command : `npm install nodemon -g`, so that you won't have to relauch the node server every time (better than re-starting with node index.js everytime)
 * Launch the server using the command : `nodemon index.js`. You can update it anytime with the command `rs` (restart server)
 * Type `npm install` from the working directory in your terminal to get the node_modules needed for our node.js server.
 
-Facebook stuff:
+### Facebook stuff:
 * Create a facebook app there : https://developers.facebook.com. Then go to your app settings and under **Products** add a product and select *Messenger* and *Webhooks*
 * Go to the **Products/webhooks** tab and set up a webhook at the ngrok url with any verify_token. Subscribe to *message_deliveries*, *messages*, *messaging_optins*, *messaging_postbacks* fields
 * Go to the **Products/Messenger** tab and get your page access token by selecting the facebook page you want to use (in Token Generation section).
