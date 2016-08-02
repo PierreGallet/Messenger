@@ -1,11 +1,11 @@
-## Messenger Bot
+# Messenger Bot
 
 This is a implementation of a bot for messenger, using a webhook that listen to POST event on a facebook page (ie : when a user send a message to that page), alert a node.js server that use facebook send API to send back the appropriate answer, that will of course be powered by some mystic pythonic algorithms.
 
-# Getting Started
+## Getting Started
 Frist things first, you should have a look at this page, carefully craft by facebook devs : https://developers.facebook.com/docs/messenger-platform/quickstart
 
-# 9 steps to victory
+## 9 steps to victory
 
 Node stuff:
 * We need a *"real url"* for our webhook (meaning not a localhost), because facebook will only accept verified urls. Ngrok is the tool for this purpose. Download ngrok there : https://ngrok.com. Launch the bash script provided and then use `ngrok 8888` to set up an url such as https://55feb1ab.ngrok.io. This will be your reverse proxy for your localhost.
