@@ -32,3 +32,5 @@ config.pythonPath = "PATH_TO_PYTHON_REPO"
 
 module.exports = config;
 ```
+
+### Now, go talk to your page and enjoy! 
