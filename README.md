@@ -1,6 +1,6 @@
 # Messenger Bot
 
-This is a implementation of a bot for messenger, using a webhook that listen to POST event on a facebook page (ie : when a user send a message to that page), alert a node.js server that use facebook send API to send back the appropriate answer, that will of course be powered by some mystic pythonic algorithms.
+This is a implementation of a bot for messenger. It uses a webhook that listen to POST event on a facebook page (ie : when a user send a message to that page), and alert a node.js server. The server then use facebook send API to send back the appropriate answer, that will of course be powered by some mystic pythonic algorithms.
 
 ## Getting Started
 Frist things first, you should have a look at this page, carefully craft by facebook devs : https://developers.facebook.com/docs/messenger-platform/quickstart
@@ -18,4 +18,17 @@ Facebook stuff:
 * Go to the **Products/webhooks** tab and set up a webhook at the ngrok url with any verify_token. Subscribe to *message_deliveries*, *messages*, *messaging_optins*, *messaging_postbacks* fields
 * Go to the **Products/Messenger** tab and get your page access token by selecting the facebook page you want to use (in Token Generation section).
 * Still on the **Products/Messenger** tab, subscribe the app to the page in the Messenger tab, in the Webhooks section.
-* To finish with, check your *config.js* file and upload it with the right parameters. Carefully choose your python path (use `which python` in the terminal to know) and your python repository path where your *predict.py* script is. You should use port 8888.
+* To finish with, create a *config.js* file and upload it with the right parameters below. Carefully choose your python path (use `which python` in the terminal to know) and your python repository path where your *predict.py* script is. You should use port 8888.
+```
+var config = {};
+
+config.verify_token = "VERIFY_TOKEN";
+config.access_token="ACCESS_TOKEN";
+config.ngrok_url = "WEBHOOK_URL";
+config.port = 8888;
+
+config.pythonScriptsPath = "PATH_TO_PYTHON_SCRIPT";
+config.pythonPath = "PATH_TO_PYTHON_REPO"
+
+module.exports = config;
+```
