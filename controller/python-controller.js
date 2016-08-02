@@ -17,7 +17,7 @@ function parsingJSON(json, recipientID, callback) {
     }
     else if(json.intent == 'give_info') {
         var mail = json.entities.email
-        var phone = json.entities.phone_number
+        var phone = json.entities.phone
         var str = ""
 
         if(mail && !isSetMail()) { str = str + "Adresse email : " + mail + ". \n\n";}
