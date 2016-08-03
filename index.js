@@ -5,11 +5,12 @@
  *
  **/
 
-var express = require('express');
-var app = express();
-var config = require('./config');
-var mainCtrl = require('./controller/main-controller');
-var buttonCtrl = require('./controller/button-controller');
+const
+    express = require('express'),
+    app = express(),
+    config = require('./config'),
+    mainCtrl = require('./controller/main-controller'),
+    buttonCtrl = require('./controller/button-controller');
 
 // Use morgan to print logs
 var morgan  = require('morgan');
@@ -22,6 +23,10 @@ app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
+
+// this variable will store the context for each senderId
+const context = {};
+const num_message = {};
 
 /*app.get('/', function (req, res) {
   res.send('Hello World!');
@@ -50,17 +55,34 @@ app.post('/', function (req, res) {
 
         // Iterate over each messaging event
         pageEntry.messaging.forEach(function(messagingEvent) {
-        if (messagingEvent.optin) {
-            mainCtrl.receivedAuthentication(messagingEvent);
-        } else if (messagingEvent.message) {
-            mainCtrl.receivedMessage(messagingEvent);
-        } else if (messagingEvent.delivery) {
-            mainCtrl.receivedDeliveryConfirmation(messagingEvent);
-        } else if (messagingEvent.postback) {
-            mainCtrl.receivedPostback(messagingEvent);
-        } else {
-            console.log("Webhook received unknown messagingEvent: ", messagingEvent);
-        }
+            if (!messagingEvent.message && !messagingEvent.postback && !messagingEvent.delivery){
+                console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+            }
+            else if (messagingEvent.delivery){
+                console.log("User has received our message")
+            }
+            else{
+                // console.log('context avant:', context)
+                if (!context[messagingEvent.sender.id]){
+                    context[messagingEvent.sender.id] = {}
+                    context[messagingEvent.sender.id]['reponses'] = {}
+                    num_message[messagingEvent.sender.id] = 0;
+                }
+                else {
+                    num_message[messagingEvent.sender.id] += 1
+                }
+                // console.log('context apres:', context)
+                console.log('message n°:', num_message[messagingEvent.sender.id])
+
+                if (messagingEvent.message) {
+                    mainCtrl.receivedMessage(messagingEvent, context[messagingEvent.sender.id], num_message[messagingEvent.sender.id]);
+                }
+                else if (messagingEvent.postback) {
+                    mainCtrl.receivedPostback(messagingEvent,  context[messagingEvent.sender.id], num_message[messagingEvent.sender.id]);
+                }
+
+            }
+
         });
     });
 
@@ -79,3 +101,5 @@ app.post('/', function (req, res) {
 app.listen(config.port, function () {
     console.log('Example app listening on port 8888!');
 });
+
+module.exports = app;

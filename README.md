@@ -19,7 +19,7 @@ Frist things first, you should have a look at this page, carefully craft by face
 * Go to the **Products/Messenger** tab and get your page access token by selecting the facebook page you want to use (in Token Generation section).
 * Still on the **Products/Messenger** tab, subscribe the app to the page in the Messenger tab, in the Webhooks section.
 * To finish with, create a *config.js* file such as below and update it with the corresponding parameters. Carefully choose your python path (use `which python` in the terminal to know) and your python repository path where your *predict.py* script is. You should use port 8888.
-```
+```javascript
 var config = {};
 
 config.verify_token = "VERIFY_TOKEN";
@@ -33,4 +33,4 @@ config.pythonPath = "PATH_TO_PYTHON_REPO"
 module.exports = config;
 ```
 
-### Now, go talk to your page and enjoy! 
+### Now, go talk to your page and enjoy!
