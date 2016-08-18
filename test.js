@@ -1,7 +1,7 @@
 // automating node creation with postback (decision trees with multiple choices)
 
 function make_button_node(list, answers_list, payload){
-    // list is a list of string at one node.
+    // we keep the limitation of 20 characters for the buttons titles
     var code = '';
     code += 'else if (payload == "' + payload + '") {\n';
     code += '   var output = {};\n';
@@ -55,7 +55,12 @@ function make_button_node(list, answers_list, payload){
 
 
 function make_quickreply_node(list, text, payload){
-    // list is a list of string at one node.
+    // we keep the limitation of 20 characters for the buttons titles
+    for (var key in list) {
+        if (list[key].length > 20){
+            list[key] = list[key].substring(0,19);
+        }
+    }
     var code = '';
     code += 'else if (payload == "' + payload + '") {\n';
     code += '   var output = {};\n';
@@ -77,7 +82,6 @@ function make_quickreply_node(list, text, payload){
 
 
 function make_generic_node(title_list, subtitle_list, item_url_list, image_url_list, text, payload){
-    // list is a list of string at one node.
     var code = '';
     code += 'else if (payload == "' + payload + '") {\n';
     code += '   var output = {};\n';
@@ -91,9 +95,9 @@ function make_generic_node(title_list, subtitle_list, item_url_list, image_url_l
         code += '       "buttons": [\n';
         code += '          {"type":"web_url",\n';
         code += '          "url":"' + item_url_list[i] + '",\n';
-        code += '          "title":"View on the Web"},\n';
+        code += '          "title":"Lire sur le Web"},\n';
         code += '          {"type":"postback",\n';
-        code += '          "title":"' + item_url_list[i] + '",\n';
+        code += '          "title":"Lire ici",\n';
         code += '          "payload":"'+ payload + '_' + i +'"}]\n';
         code += '       }';
         if(i < title_list.length-1){

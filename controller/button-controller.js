@@ -57,13 +57,13 @@ function payloadAnalyser(event, sendCallback) {
            "title":"Forfait et options",
            "payload":"0_0_0"},
            {"content_type":"text",
-           "title":"Mobile, carte SIM et réseau",
+           "title":"Mobile, carte SIM e",
            "payload":"0_0_1"},
            {"content_type":"text",
-           "title":"Contrat, compte et identifants",
+           "title":"Contrat, compte et ",
            "payload":"0_0_2"},
            {"content_type":"text",
-           "title":"Consommation et facture",
+           "title":"Consommation et fac",
            "payload":"0_0_3"}
        ];
        sendCallback("quick_reply", output, senderId);
@@ -86,7 +86,7 @@ function payloadAnalyser(event, sendCallback) {
        output.text = "Votre demande concerne...";
        output.proposals = [
            {"content_type":"text",
-           "title":"Les forfaits",
+           "title":"Les forfaits mobile",
            "payload":"0_2_0"},
            {"content_type":"text",
            "title":"L'offre RED Fibre",
@@ -95,10 +95,10 @@ function payloadAnalyser(event, sendCallback) {
            "title":"Le réseau SFR",
            "payload":"0_2_2"},
            {"content_type":"text",
-           "title":"Désimlocker",
+           "title":"Désimlocker son mob",
            "payload":"0_2_3"},
            {"content_type":"text",
-           "title":"Changer d'op",
+           "title":"Changer d'opérateur",
            "payload":"0_2_4"}
        ];
        sendCallback("quick_reply", output, senderId);
@@ -108,25 +108,25 @@ function payloadAnalyser(event, sendCallback) {
        output.text = "Plus précisément...";
        output.proposals = [
            {"content_type":"text",
-           "title":"Souscrire à un nouveau forfait RED",
+           "title":"Souscrire à un nouv",
            "payload":"0_0_0_0"},
            {"content_type":"text",
            "title":"Changer de forfait",
            "payload":"0_0_0_1"},
            {"content_type":"text",
-           "title":"Résilier votre forfait",
+           "title":"Résilier votre forf",
            "payload":"0_0_0_2"},
            {"content_type":"text",
-           "title":"Ajouter, résilier une option",
+           "title":"Ajouter, résilier u",
            "payload":"0_0_0_3"},
            {"content_type":"text",
-           "title":"Recharger un forfait bloqué",
+           "title":"Recharger un forfai",
            "payload":"0_0_0_4"},
            {"content_type":"text",
-           "title":"Demander la protabilité de son numéro (RIO)",
+           "title":"Demander la protabi",
            "payload":"0_0_0_5"},
            {"content_type":"text",
-           "title":"Tout savoir sur l'International",
+           "title":"Tout savoir sur l'I",
            "payload":"0_0_0_6"}
        ];
        sendCallback("quick_reply", output, senderId);
@@ -152,28 +152,28 @@ function payloadAnalyser(event, sendCallback) {
        output.text = "Plus précisément...";
        output.proposals = [
            {"content_type":"text",
-           "title":"Accéder à votre espace client",
+           "title":"Accéder à votre esp",
            "payload":"0_0_2_0"},
            {"content_type":"text",
-           "title":"Changer votre mot de passe",
+           "title":"Changer votre mot d",
            "payload":"0_0_2_1"},
            {"content_type":"text",
-           "title":"Récupérer votre mot de passe perdu",
+           "title":"Récupérer votre mot",
            "payload":"0_0_2_2"},
            {"content_type":"text",
-           "title":"Modifier vos données personnelles et bancaires",
+           "title":"Modifier vos donnée",
            "payload":"0_0_2_3"},
            {"content_type":"text",
-           "title":"Changer de numéro de téléphone",
+           "title":"Changer de numéro d",
            "payload":"0_0_2_4"},
            {"content_type":"text",
-           "title":"Céder votre forfait à un proche",
+           "title":"Céder votre forfait",
            "payload":"0_0_2_5"},
            {"content_type":"text",
-           "title":"Demander ou gérer vos procurations de ligne",
+           "title":"Demander ou gérer v",
            "payload":"0_0_2_6"},
            {"content_type":"text",
-           "title":"Signer, consulter votre mandat de prélèvement (SEPA)",
+           "title":"Signer, consulter v",
            "payload":"0_0_2_7"}
        ];
        sendCallback("quick_reply", output, senderId);
@@ -183,16 +183,16 @@ function payloadAnalyser(event, sendCallback) {
        output.text = "Plus précisément...";
        output.proposals = [
            {"content_type":"text",
-           "title":"Suivre votre consommation",
+           "title":"Suivre votre consom",
            "payload":"0_0_3_0"},
            {"content_type":"text",
            "title":"Payer votre facture",
            "payload":"0_0_3_1"},
            {"content_type":"text",
-           "title":"Consulter votre facture",
+           "title":"Consulter votre fac",
            "payload":"0_0_3_2"},
            {"content_type":"text",
-           "title":"Comprendre votre facture",
+           "title":"Comprendre votre fa",
            "payload":"0_0_3_3"}
        ];
        sendCallback("quick_reply", output, senderId);
@@ -202,16 +202,16 @@ function payloadAnalyser(event, sendCallback) {
        output.text = "Plus précisément...";
        output.proposals = [
            {"content_type":"text",
-           "title":"Forfait, options",
+           "title":"Forfait, options et",
            "payload":"0_1_0_0"},
            {"content_type":"text",
-           "title":"Equipements Box, TV",
+           "title":"Equipements Box + TV",
            "payload":"0_1_0_1"},
            {"content_type":"text",
-           "title":"Contrats, compte",
+           "title":"Contrats, compte et",
            "payload":"0_1_0_2"},
            {"content_type":"text",
-           "title":"Consommation et",
+           "title":"Consommation et fac",
            "payload":"0_1_0_3"}
        ];
        sendCallback("quick_reply", output, senderId);
@@ -221,16 +221,16 @@ function payloadAnalyser(event, sendCallback) {
        output.text = "Plus précisément...";
        output.proposals = [
            {"content_type":"text",
-           "title":"Forfait, options et services",
+           "title":"Forfait, options et",
            "payload":"0_1_1_0"},
            {"content_type":"text",
            "title":"Equipements Box + TV",
            "payload":"0_1_1_1"},
            {"content_type":"text",
-           "title":"Contrats, compte et identifiants",
+           "title":"Contrats, compte et",
            "payload":"0_1_1_2"},
            {"content_type":"text",
-           "title":"Consommation et facture",
+           "title":"Consommation et fac",
            "payload":"0_1_1_3"}
        ];
        sendCallback("quick_reply", output, senderId);
@@ -246,9 +246,9 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://communaute.red-by-sfr.fr/t5/FAQ/Qu-est-ce-que-les-offres-Mobile-RED-by-SFR/ta-p/418#sfrintid=A_contact_RNEW-1",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://communaute.red-by-sfr.fr/t5/FAQ/Qu-est-ce-que-les-offres-Mobile-RED-by-SFR/ta-p/418#sfrintid=A_contact_RNEW-1",
+              "title":"Lire ici",
               "payload":"0_2_0_0"}]
            },
            {"title":"Accéder à la boutique en ligne",
@@ -258,13 +258,13 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://red-by-sfr.fr/forfaits-mobiles/#sfrintid=A_contact_RNEW-1",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://red-by-sfr.fr/forfaits-mobiles/#sfrintid=A_contact_RNEW-1",
+              "title":"Lire ici",
               "payload":"0_2_0_1"}]
            }
        ];
-       sendCallback("text", output.text, senderId)
+       sendCallback("text", output.text, senderId);
        sendCallback("generic", output, senderId);
     }
     else if (payload == "0_2_1") {
@@ -278,9 +278,9 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-2",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-2",
+              "title":"Lire ici",
               "payload":"0_2_1_0"}]
            },
            {"title":"Accéder à la boutique en ligne",
@@ -290,13 +290,14 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://red-by-sfr.fr/forfaits-mobiles/#sfrintid=A_contact_RNEW-1",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://red-by-sfr.fr/forfaits-mobiles/#sfrintid=A_contact_RNEW-1",
+              "title":"Lire ici",
               "payload":"0_2_1_1"}]
            }
        ];
-       sendCallback("quick_reply", output, senderId);
+       sendCallback("text", output.text, senderId);
+       sendCallback("generic", output, senderId);
     }
     else if (payload == "0_2_2") {
        var output = {};
@@ -309,9 +310,9 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://red-by-sfr.fr/couverture-reseau/%20%20#sfrintid=A_contact_RNEW-3",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://red-by-sfr.fr/couverture-reseau/%20%20#sfrintid=A_contact_RNEW-3",
+              "title":"Lire ici",
               "payload":"0_2_2_0"}]
            },
            {"title":"Accéder à la boutique en ligne",
@@ -321,9 +322,9 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://red-by-sfr.fr/couverture-reseau/%20%20#sfrintid=A_contact_RNEW-3",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://red-by-sfr.fr/couverture-reseau/%20%20#sfrintid=A_contact_RNEW-3",
+              "title":"Lire ici",
               "payload":"0_2_2_1"}]
            },
            {"title":"Accéder à la boutique en ligne",
@@ -333,13 +334,14 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://red-by-sfr.fr/couverture-reseau/%20%20#sfrintid=A_contact_RNEW-3",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://red-by-sfr.fr/couverture-reseau/%20%20#sfrintid=A_contact_RNEW-3",
+              "title":"Lire ici",
               "payload":"0_2_2_2"}]
            }
        ];
-       sendCallback("quick_reply", output, senderId);
+       sendCallback("text", output.text, senderId);
+       sendCallback("generic", output, senderId);
     }
     else if (payload == "0_2_3") {
        var output = {};
@@ -352,13 +354,14 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-4",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-4",
+              "title":"Lire ici",
               "payload":"0_2_3_0"}]
            }
        ];
-       sendCallback("quick_reply", output, senderId);
+       sendCallback("text", output.text, senderId);
+       sendCallback("generic", output, senderId);
     }
     else if (payload == "0_2_1") {
        var output = {};
@@ -371,9 +374,9 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://communaute.red-by-sfr.fr/t5/FAQ/Comment-changer-d-opérateur-Le-RIO-et-la-portabilité-de-votre/ta-p/424#sfrintid=A_contact_RNEW-5",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://communaute.red-by-sfr.fr/t5/FAQ/Comment-changer-d-opérateur-Le-RIO-et-la-portabilité-de-votre/ta-p/424#sfrintid=A_contact_RNEW-5",
+              "title":"Lire ici",
               "payload":"0_2_1_0"}]
            },
            {"title":"Consulter nos fiches aide & conseils",
@@ -383,13 +386,14 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-5",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-5",
+              "title":"Lire ici",
               "payload":"0_2_1_1"}]
            }
        ];
-       sendCallback("quick_reply", output, senderId);
+       sendCallback("text", output.text, senderId);
+       sendCallback("generic", output, senderId);
     }
     else if (payload == "0_2_1") {
        var output = {};
@@ -402,9 +406,9 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://communaute.red-by-sfr.fr/t5/FAQ/Comment-changer-d-opérateur-Le-RIO-et-la-portabilité-de-votre/ta-p/424#sfrintid=A_contact_RNEW-5",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://communaute.red-by-sfr.fr/t5/FAQ/Comment-changer-d-opérateur-Le-RIO-et-la-portabilité-de-votre/ta-p/424#sfrintid=A_contact_RNEW-5",
+              "title":"Lire ici",
               "payload":"0_2_1_0"}]
            },
            {"title":"Consulter la communauté Red",
@@ -414,9 +418,9 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-5",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-5",
+              "title":"Lire ici",
               "payload":"0_2_1_1"}]
            },
            {"title":"Accéder à la boutique en ligne",
@@ -426,13 +430,14 @@ function payloadAnalyser(event, sendCallback) {
            "buttons": [
               {"type":"web_url",
               "url":"undefined",
-              "title":"View on the Web"},
+              "title":"Lire sur le Web"},
               {"type":"postback",
-              "title":"undefined",
+              "title":"Lire ici",
               "payload":"0_2_1_2"}]
            }
        ];
-       sendCallback("quick_reply", output, senderId);
+       sendCallback("text", output.text, senderId);
+       sendCallback("generic", output, senderId);
     }
     else {
         // Message d'erreur pour payload non connu
