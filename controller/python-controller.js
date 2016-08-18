@@ -31,7 +31,7 @@ function past_context(context, intent){
 }
 
 
-function parsingJSON(json, context, num_message, senderID, callback, reset) {
+function parsingJSON(json, context, num_message, senderID, sendCallback, reset) {
 
     context[num_message] = json;
 
@@ -55,11 +55,11 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
         else {
             output = "Bonjour, que pouvons-nous faire pour vous?";
         }
-        callback("text", output, senderID);
+        sendCallback("text", output, senderID);
     }
     else if (json.intent[0] == "thanks") {
         var output = "Mais de rien, ce fut un plaisir de vous conseiller. Puis-je faire autre chose?";
-        callback("text", output, senderID);
+        sendCallback("text", output, senderID);
     }
     else if (json.entities.bank || json.entities.phone || json.entities.bank || json.entities.zipcode) {
         var mail = json.entities.email;
@@ -85,7 +85,7 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
                      "title":"Non",
                      "payload":"payloadNonGiveInfos"}
                 ];
-            callback("button", output, senderID);
+            sendCallback("button", output, senderID);
         }
         else {
             errorMessage = true;
@@ -96,15 +96,15 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
     else if (context[num_message-1] && context[num_message-1].intent[0] == 'SFR Presse'){
         if (context[num_message_copy].intent[0] == 'plainte_augmentation_facture') {
             var output = "L'augmentation de votre facture n'est pas du à l'option SFR Presse, c'est votre forfait qui a augmenté.";
-            callback("text", output, senderID);
+            sendCallback("text", output, senderID);
         }
         else if (context[num_message_copy].intent[0] == 'resiliation') {
             var output = "J'ai bien compris que vous souhaitiez résilier l'option SFR Presse, cependant je vous informe que celle-ci est gratuite. Souhaitez vous toujours la résilier?";
-            callback("text", output, senderID);
+            sendCallback("text", output, senderID);
         }
         else if (context[num_message_copy].intent[0] == 'demande_info') {
             var output = "L'option Sfr presse est une option gratuite qui vous permet d’accéder chaque mois depuis votre mobile, votre tablette ou votre ordinateur à une sélection de 10 titres de presse parmi des dizaines de journaux et magazines à consulter en WiFi/4G ou hors connexion. Souhaitez vous plus d'information?";
-            callback("text", output, senderID);
+            sendCallback("text", output, senderID);
         }
         else {
             errorMessage = true;
@@ -117,11 +117,11 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
         // on va maintenant trouver la reponse à lui donner selon l'intent actuel et l'intent passé qui donne acces à notre question. (par exemple il pourrait dire oui/non, ou alors quelque chose de plus complexe)
         if (context[num_message_copy].intent[0] == 'plainte_augmentation_facture') {
             var output = "Si votre facture a augmenté, ce n'est pas du à SFR presse, mais à l'augmentation tarifaire de votre forfait mobile.";
-            callback("text", output, senderID);
+            sendCallback("text", output, senderID);
         }
         else if (context[num_message_copy].intent[0] == 'resiliation' || context[num_message_copy].tonalite == 'positive') {
             var output = "Très bien. Pour m'assurer de votre identité, j'aurais besoin du nom de votre banque et de votre code postal, s'il vous plait.";
-            callback("text", output, senderID);
+            sendCallback("text", output, senderID);
         }
         else {
             errorMessage = true;
@@ -132,15 +132,15 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
     else if (context[num_message-1] && context[num_message-1].intent[0] == 'demande_info' && past_context(context, 'SFR Presse')){
         if (context[num_message_copy].intent[0] == 'resiliation') {
             var output = "J'ai bien compris que vous souhaitiez résilier l'option SFR Presse, cependant je vous informe que celle-ci est gratuite. Souhaitez vous toujours la résilier?";
-            callback("text", "Vous avez compris que SFR presse est un service gratuit?", senderID);
+            sendCallback("text", "Vous avez compris que SFR presse est un service gratuit?", senderID);
         }
         else if (context[num_message_copy].intent[0] == 'demande_info') {
             var output = "Je vous renvoie vers la documentation pour plus d'informations: http://communaute.red-by-sfr.fr/t5/FAQ/SFR-Presse-qu-est-ce-que-c-est/ta-p/26385";
-            callback("text", output, senderID);
+            sendCallback("text", output, senderID);
         }
         else if (context[num_message_copy].intent[0] == 'plainte_augmentation_facture') {
             var output = "Si votre facture a augmenté, ce n'est pas du à SFR presse, mais à l'augmentation tarifaire de votre forfait mobile.";
-            callback("text", output, senderID);
+            sendCallback("text", output, senderID);
         }
         else {
             errorMessage = true;
@@ -181,12 +181,12 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
                   payload: "new_forfait",
                 }],
             }];
-            callback("text", output.text, senderID);
-            callback("generic", output, senderID);
+            sendCallback("text", output.text, senderID);
+            sendCallback("generic", output, senderID);
         }
         else if (context[num_message_copy].intent[0] == 'resiliation') {
             var output = "Très bien. Pour m'assurer de votre identité, j'aurais besoin du nom de votre banque et de votre code postal, s'il vous plait.";
-            callback("text", output, senderID);
+            sendCallback("text", output, senderID);
         }
         else {
             errorMessage = true;
@@ -196,7 +196,7 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
 
     else if (json.intent[0] == 'SFR Presse') {
         var output = "J'ai bien compris que vous nous contactiez à propos du service SFR Presse, pouvez vous préciser votre demande?";
-        callback("text", output, senderID);
+        sendCallback("text", output, senderID);
     }
 
     else if (!json.ok) {
@@ -215,7 +215,7 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
                      "title":"Non",
                      "payload":"payloadNonIntent"}
                 ];
-        callback("quick_reply", output, senderID);
+        sendCallback("quick_reply", output, senderID);
     }
     else {
         errorMessage = true;
@@ -227,14 +227,14 @@ function parsingJSON(json, context, num_message, senderID, callback, reset) {
     if (errorMessage && errorMessageCount < 3) {
         errorMessage = false;
         var output = "Nous n'avons pas compris votre message, pouvez-vous le reformuler s'il vous plaît?";
-        callback("text", output, senderID);
+        sendCallback("text", output, senderID);
     }
     else if(errorMessage && errorMessageCount == 3){
         errorMessage = false;
         errorMessageCount = 0;
         var output = "Recommencons depuis le début : Bonjour, quel est votre problème?";
         reset(senderID); // reset the context and num_message variables.
-        callback("text", output, senderID);
+        sendCallback("text", output, senderID);
         return;
     }
 
