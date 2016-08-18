@@ -154,7 +154,7 @@ make_generic_node(['Consulter nos fiches aide & conseils', 'Consulter nos fiches
                   ['http://communaute.red-by-sfr.fr/t5/FAQ/Comment-changer-d-opérateur-Le-RIO-et-la-portabilité-de-votre/ta-p/424#sfrintid=A_contact_RNEW-5', "http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ#sfrintid=A_contact_RNEW-5"],
                   ['', ''],
                   'Voici nos solutions immédiates. Avez vous trouvé votre réponse?',
-                  '0_2_1');
+                  '0_2_4');
 
 // fourth step
 make_generic_node(['Consulter nos fiches aide & conseils', 'Consulter la communauté Red', 'Accéder à la boutique en ligne'],

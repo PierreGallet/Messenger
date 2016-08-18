@@ -363,7 +363,7 @@ function payloadAnalyser(event, sendCallback) {
        sendCallback("text", output.text, senderId);
        sendCallback("generic", output, senderId);
     }
-    else if (payload == "0_2_1") {
+    else if (payload == "0_2_4") {
        var output = {};
        output.text = "Voici nos solutions immédiates. Avez vous trouvé votre réponse?";
        output.proposals = [
@@ -377,7 +377,7 @@ function payloadAnalyser(event, sendCallback) {
               "title":"Lire sur le Web"},
               {"type":"postback",
               "title":"Lire ici",
-              "payload":"0_2_1_0"}]
+              "payload":"0_2_4_0"}]
            },
            {"title":"Consulter nos fiches aide & conseils",
            "subtitle":"Retrouver toute l'Assistance RED",
@@ -389,7 +389,7 @@ function payloadAnalyser(event, sendCallback) {
               "title":"Lire sur le Web"},
               {"type":"postback",
               "title":"Lire ici",
-              "payload":"0_2_1_1"}]
+              "payload":"0_2_4_1"}]
            }
        ];
        sendCallback("text", output.text, senderId);
