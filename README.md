@@ -8,7 +8,7 @@ Frist things first, you should have a look at this page, carefully craft by face
 ## 9 steps to victory
 
 ### Node stuff:
-* We need a *"real url"* for our webhook (meaning not a localhost), because facebook will only accept verified urls. Ngrok is the tool for this purpose. Download ngrok there : https://ngrok.com. Launch the bash script provided and then use `ngrok 8888` to set up an url such as https://55feb1ab.ngrok.io. This will be your reverse proxy for your localhost.
+* We need a *"real url"* for our webhook (meaning not a localhost), because facebook will only accept verified urls. Ngrok is the tool for this purpose. Download ngrok there : https://ngrok.com. Put the binary in usr/local/bin or your equivalent directory linked to your $PATH environment variable. Then use from anywhere in the terminal `ngrok http 8888` to set up an url such as https://55feb1ab.ngrok.io. This will be your reverse proxy for your localhost.
 * Download nodemon with the command : `npm install nodemon -g`, so that you won't have to relauch the node server every time (better than re-starting with node index.js everytime)
 * Launch the server using the command : `nodemon index.js`. You can update it anytime with the command `rs` (restart server)
 * Type `npm install` from the working directory in your terminal to get the node_modules needed for our node.js server.
@@ -22,8 +22,8 @@ Frist things first, you should have a look at this page, carefully craft by face
 ```javascript
 var config = {};
 
-config.verify_token = "VERIFY_TOKEN";
-config.access_token="ACCESS_TOKEN";
+config.FB_VERIFY_TOKEN = "VERIFY_TOKEN";
+config.FB_PAGE_TOKEN="ACCESS_TOKEN";
 config.ngrok_url = "WEBHOOK_URL";
 config.port = 8888;
 

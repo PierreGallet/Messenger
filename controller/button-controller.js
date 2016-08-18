@@ -4,7 +4,7 @@
 
 var config = require('../config');
 var request = require('request');
-var MainCrtl = require('./main-controller')
+var MainCrtl = require('./main-controller');
 
 function payloadAnalyser(event, sendMessage) {
 
@@ -27,9 +27,22 @@ function payloadAnalyser(event, sendMessage) {
         // TODO : Transmet l'information à python
         sendMessage(senderId, "Pouvez-vous nous donner votre adresse mail et numéro de téléphone afin de poursuivre la résolution de votre problème s'il-vous-plaît?");
     }
-    else if (payload = "payloadNonIntent") {
+    else if (payload == "payloadNonIntent") {
         // TODO : Transmet l'info à python
         sendMessage(senderId, "Excusez-nous, pouvez-vous reformuler votre question s'il-vous-plaît.");
+    }
+    else if (payload == "payloadNonIntent") {
+        var output = {};
+            output.text = "Vous avez un problème concernant: " + json.intent[0] + "?";
+            output.proposals = [{
+                    "content_type":"text",
+                    "title":"Oui",
+                    "payload":"payloadOuiIntent"},
+                    {"content_type":"text",
+                     "title":"Non",
+                     "payload":"payloadNonIntent"}
+                ];
+        callback("quick_reply", output, senderID);
     }
     else {
         // Message d'erreur pour payload non connu

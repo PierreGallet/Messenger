@@ -18,23 +18,29 @@ app.use( morgan('combined') );
 
 var request = require('request');
 
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
 // this variable will store the context for each senderId
-const context = {};
-const num_message = {};
+var context = {};
+var num_message = {};
 
-/*app.get('/', function (req, res) {
-  res.send('Hello World!');
-});*/
+// app.get('/', function (req, res) {
+//   res.send('Hello World!');
+// });
+
+var reset = function(senderID) {
+    context[senderID] = {};
+    context[senderID].reponses = {};
+    num_message[senderID] = -1;
+};
 
 app.get('/', function(req, res) {
     if (req.query['hub.mode'] === 'subscribe' &&
-        req.query['hub.verify_token'] === config.verify_token) {
+        req.query['hub.verify_token'] === config.FB_VERIFY_TOKEN) {
         console.log("Validating webhook");
         res.status(200).send(req.query['hub.challenge']);
     } else {
@@ -59,23 +65,23 @@ app.post('/', function (req, res) {
                 console.log("Webhook received unknown messagingEvent: ", messagingEvent);
             }
             else if (messagingEvent.delivery){
-                console.log("User has received our message")
+                console.log("User has received our message");
             }
             else{
                 // console.log('context avant:', context)
                 if (!context[messagingEvent.sender.id]){
-                    context[messagingEvent.sender.id] = {}
-                    context[messagingEvent.sender.id]['reponses'] = {}
+                    context[messagingEvent.sender.id] = {};
+                    context[messagingEvent.sender.id].reponses = {};
                     num_message[messagingEvent.sender.id] = 0;
                 }
                 else {
-                    num_message[messagingEvent.sender.id] += 1
+                    num_message[messagingEvent.sender.id] += 1;
                 }
                 // console.log('context apres:', context)
-                console.log('message n°:', num_message[messagingEvent.sender.id])
+                console.log('__________________________________________ message n°:', num_message[messagingEvent.sender.id], ' _____________________________________________');
 
                 if (messagingEvent.message) {
-                    mainCtrl.receivedMessage(messagingEvent, context[messagingEvent.sender.id], num_message[messagingEvent.sender.id]);
+                    mainCtrl.receivedMessage(messagingEvent, context[messagingEvent.sender.id], num_message[messagingEvent.sender.id], reset);
                 }
                 else if (messagingEvent.postback) {
                     mainCtrl.receivedPostback(messagingEvent,  context[messagingEvent.sender.id], num_message[messagingEvent.sender.id]);
@@ -85,6 +91,8 @@ app.post('/', function (req, res) {
 
         });
     });
+
+
 
     // Assume all went well.
     //
@@ -98,8 +106,11 @@ app.post('/', function (req, res) {
 // Start server
 // Webhooks must be available via SSL with a certificate signed by a valid
 // certificate authority.
-app.listen(config.port, function () {
+app.listen(config.port || process.env.PORT, function () {
     console.log('Example app listening on port 8888!');
 });
 
-module.exports = app;
+// module.exports = app;
+
+var exports = module.exports = {};
+exports.reset = reset;
