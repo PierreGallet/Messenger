@@ -1,17 +1,17 @@
 {
   "name": "messenger-chatbot",
   "version": "0.0.1",
-  "description": "a messenger chatbot",
+  "description": "A messenger chatbot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.my.ecp.fr:2015raspaudj/messenger-chatbot.git"
+    "url": "https://github.com/PierreGallet/Messenger"
   },
-  "author": "Djou&AlphaBet",
+  "author": "Sendit",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",

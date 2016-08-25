@@ -11,6 +11,7 @@ const
     config = require('./config'),
     mainCtrl = require('./controller/main-controller'),
     buttonCtrl = require('./controller/button-controller');
+    request = require('request');
 
 // Use morgan to print logs
 var morgan  = require('morgan');
@@ -28,9 +29,9 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 var context = {};
 var num_message = {};
 
-// app.get('/', function (req, res) {
-//   res.send('Hello World!');
-// });
+app.get('/', function (req, res) {
+  res.send('Hello World!');
+});
 
 var reset = function(senderID) {
     context[senderID] = {};
@@ -38,7 +39,17 @@ var reset = function(senderID) {
     num_message[senderID] = -1;
 };
 
-app.get('/', function(req, res) {
+app.use(express.static(__dirname + '/public'));
+
+// app.get('/assets', function(req, res){
+//     res.send('Hello World!');
+//     console.log(req);
+//     console.log(res);
+// });
+
+app.get('/webhook', function(req, res) {
+    console.log('request:', req);
+    console.log('resultat:', res);
     if (req.query['hub.mode'] === 'subscribe' &&
         req.query['hub.verify_token'] === config.FB_VERIFY_TOKEN) {
         console.log("Validating webhook");
@@ -49,7 +60,7 @@ app.get('/', function(req, res) {
     }
 });
 
-app.post('/', function (req, res) {
+app.post('/webhook', function (req, res) {
     var data = req.body;
     // Make sure this is a page subscription
     if (data.object == 'page') {
@@ -80,20 +91,13 @@ app.post('/', function (req, res) {
                 // console.log('context apres:', context)
                 console.log('__________________________________________ message n°:', num_message[messagingEvent.sender.id], ' _____________________________________________');
 
-                if (messagingEvent.message) {
-                    mainCtrl.receivedMessage(messagingEvent, context[messagingEvent.sender.id], num_message[messagingEvent.sender.id], reset);
-                }
-                else if (messagingEvent.postback) {
-                    mainCtrl.receivedPostback(messagingEvent,  context[messagingEvent.sender.id], num_message[messagingEvent.sender.id]);
-                }
+                get_user_profile(context, num_message, messagingEvent, receivedCallback);
+
 
             }
 
         });
     });
-
-
-
     // Assume all went well.
     //
     // You must send back a 200, within 20 seconds, to let us know you've
@@ -102,6 +106,33 @@ app.post('/', function (req, res) {
   }
 });
 
+function get_user_profile(context, num_message, messagingEvent, receivedCallback){
+    if (!context[messagingEvent.sender.id].first_name || typeof context[messagingEvent.sender.id].first_name === 'undefined'){
+        var url_user_info = 'https://graph.facebook.com/v2.6/'+messagingEvent.sender.id+'?access_token='+config.FB_PAGE_TOKEN;
+        request.get(url_user_info, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+            context[messagingEvent.sender.id].first_name = JSON.parse(body).first_name;
+            context[messagingEvent.sender.id].last_name = JSON.parse(body).last_name;
+            receivedCallback(messagingEvent);
+            }
+            else {
+                console.error(response);
+                console.error(error);
+            }
+        });
+    }
+    else {
+        receivedCallback(messagingEvent);
+    }
+}
+function receivedCallback(messagingEvent){
+    if (messagingEvent.message) {
+        mainCtrl.receivedMessage(messagingEvent, context[messagingEvent.sender.id], num_message[messagingEvent.sender.id], reset);
+    }
+    else if (messagingEvent.postback) {
+        mainCtrl.receivedPostback(messagingEvent,  context[messagingEvent.sender.id], num_message[messagingEvent.sender.id]);
+    }
+}
 
 // Start server
 // Webhooks must be available via SSL with a certificate signed by a valid

@@ -5,7 +5,7 @@ This is a implementation of a bot for messenger. It uses a webhook that listen t
 ## Getting Started
 Frist things first, you should have a look at this page, carefully craft by facebook devs : https://developers.facebook.com/docs/messenger-platform/quickstart
 
-## 9 steps to victory
+## Set up
 
 ### Node stuff:
 * We need a *"real url"* for our webhook (meaning not a localhost), because facebook will only accept verified urls. Ngrok is the tool for this purpose. Download ngrok there : https://ngrok.com. Put the binary in usr/local/bin or your equivalent directory linked to your $PATH environment variable. Then use from anywhere in the terminal `ngrok http 8888` to set up an url such as https://55feb1ab.ngrok.io. This will be your reverse proxy for your localhost.
@@ -32,5 +32,31 @@ config.pythonPath = "PATH_TO_PYTHON_REPO"
 
 module.exports = config;
 ```
-
 ### Now, go talk to your page and enjoy!
+
+## Build
+
+* `make_faqjson.js` generate `faq_step.json` and then `faq.json`, that is used in `make_dispatcher_tree.js` to make the tree structure.
+* `make_dispatcher_tree.js` generate the code for the quick replies used for the tree structure, using `faq.json`. This code is to be copy pasted in the `button-controller.js`.
+* `make_read_here.js` generate the code for the read here button on the generic template pushed to the user, using `link2answer.json`, the scraping result. `link2answer.json` is formated in python so that it match the 320 characters limits, and it extract the link and image of the FAQ. This code is to be copy pasted in the `main-controller` in the *receivedPostback* function.
+* `link2newlink.json` is mainly used in `make_dispatcher_tree.js`>`make_generic_node` function to update old links, so that it will works with the payload of the `link2answer.json` file (that has only new urls as it was just scraped)
+* `motifs.json` is used in `make_dispatcher_tree.js`>`make_quickreply_node` function to update the categories exceeding 20 characters (for complying to the fb messenger API restriction for quick reply items.)
+
+## How it works
+
+* request are incoming in `index.js`. This is where we instanciate the app and where we listen to facebook messenger event though a webhook. Incoming message can be of two types:
+** **postback**, that are the payload of our button & generic templates. Those are handled in `mainCtrl.receivedPostback` function.
+** **message**, that are either a text message for the user, or the payload of a quick reply. Those are handle in 'mainCtrl.receivedMessage' function.
+* `main-controller.js` is mainly composed of four elements:
+** `gettingStarted`, `greetingText` & menu that are three function that need to send a POST request once in order to set up the getting started button, the menu button...
+** `receivedMessage` & `receivedPostback`, as mention earlier (note the read_here buttons payload in the `receivedPostback` function)
+** `sendCallback`, that is used as a callback that triggers the sendAPI for `python-controller` and `button-controller`. `sendHelpMessage`, `sendTextMessage`, `sendButtonMessage`, `sendQuickReply`, etc... are functions that parse the output to the fb json format.
+** `callSendAPI`, to finish with, is the function that actually call the fb send API.
+* `button-controller.js` is handling quick reply's payload
+* `python-controller.js` is handling machine learning features.
+
+## To be careful about
+
+* payload are limited to 1000 characters
+* text is limited to 320 characters
+* quick replies are limited to 20 characters
