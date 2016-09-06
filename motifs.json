@@ -53,7 +53,7 @@
     "Suivre/annuler votre commande": "Gérer votre commande",
     "Résilier votre offre internet": "Résilier vtore offre",
     "Bénéficier de la remise RED Internet + Mobile": "RED Internet + Mob.",
-    "Renvoyer vos équipements": "Renvoie équipements",
+    "Renvoyer vos équipements": "Renvoie équipement",
     "Demander/gérer vos procurations de ligne": "Procuration de ligne",
     "Connaitre les offres RED Fibre": "Les offres RED Fibre",
     "Consulter le mode d'emploi de votre mobile": "Accès Mode d'emploi",
@@ -70,5 +70,7 @@
     "Problème de reception/emission d'appels": "Problème d'appels",
     "Signer votre mandat de prélèvement (SEPA)": "Signer mandat SEPA",
     "Mettre en place le contrôle parental": "Contrôle parental",
-    "Utiliser les services TV": "Utiliser services TV"
+    "Utiliser les services TV": "Utiliser services TV",
+    "Se connecter en Wifi":"Connexion en Wifi",
+    "Equipements Box + TV" : " Equipement Box TV"
 }

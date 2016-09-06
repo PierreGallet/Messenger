@@ -9,6 +9,7 @@ function node(list, key){
 }
 
 var links = [];
+
 function ending_node(title, sub, link, img, payload){
     data = fs.readFileSync('./link2newlink.json');
     data = JSON.parse(data);

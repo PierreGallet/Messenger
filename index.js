@@ -10,14 +10,16 @@ const
     app = express(),
     config = require('./config'),
     mainCtrl = require('./controller/main-controller'),
-    buttonCtrl = require('./controller/button-controller');
-    request = require('request');
+    buttonCtrl = require('./controller/button-controller'),
+    nodeCtrl = require('./controller/node-controller'),
+    request = require('request'),
+    path = require('path');
 
 // Use morgan to print logs
 var morgan  = require('morgan');
 app.use( morgan('combined') );
 
-var request = require('request');
+//var request = require('request');
 
 var bodyParser = require('body-parser');
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -33,10 +35,10 @@ app.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-var reset = function(senderID) {
-    context[senderID] = {};
-    context[senderID].reponses = {};
-    num_message[senderID] = -1;
+var reset = function(senderId) {
+    context[senderId] = {};
+    context[senderId].reponses = {};
+    num_message[senderId] = -1;
 };
 
 app.use(express.static(__dirname + '/public'));
@@ -47,13 +49,22 @@ app.use(express.static(__dirname + '/public'));
 //     console.log(res);
 // });
 
+console.log(path.join(__dirname, './public/assets/logo.jpg'))
+
+// app.get('/lol',function(req, res){
+//   res.sendFile(path.join(__dirname, './public/assets/logo.jpg'));
+// });
+
 app.get('/webhook', function(req, res) {
-    console.log('request:', req);
-    console.log('resultat:', res);
+    //console.log('request:', req);
+    //console.log('resultat:', res);
     if (req.query['hub.mode'] === 'subscribe' &&
         req.query['hub.verify_token'] === config.FB_VERIFY_TOKEN) {
         console.log("Validating webhook");
         res.status(200).send(req.query['hub.challenge']);
+        gettingStarted();
+        greetingText();
+        addPersistentMenu();
     } else {
         console.error("Failed validation. Make sure the validation tokens match.");
         res.sendStatus(403);
@@ -72,30 +83,54 @@ app.post('/webhook', function (req, res) {
 
         // Iterate over each messaging event
         pageEntry.messaging.forEach(function(messagingEvent) {
-            if (!messagingEvent.message && !messagingEvent.postback && !messagingEvent.delivery){
-                console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+
+            var senderId = messagingEvent.sender.id
+            var message = messagingEvent.message
+
+            //console.log('-----messagingEvent------\n',messagingEvent,'\n\n')
+
+            // 5 types d'event peuvent arriver
+            if ((messagingEvent.message && !messagingEvent.message.is_echo)||(messagingEvent.postback)){
+              // Event ou le user a soit rédigé un message, soit répondu à une quick_reply, soit à un postback
+
+              if (!context[senderId]){
+                context[senderId] = {};
+                context[senderId].reponses = {};
+                context[senderId].questions = {};
+                num_message[senderId] = 0;
+              }
+              else {
+                  num_message[senderId] += 1;
+              }
+
+              console.log('__________________________________________ message n°:', num_message[messagingEvent.sender.id], ' _____________________________________________');
+
+              console.log('messagingEvent :',messagingEvent)
+
+              try{
+                console.log('In the try')
+                context[senderId].questions[num_message[senderId]]= message.text
+              }
+              catch(e) {
+                console.log('Postback')
+                context[senderId].questions[num_message[senderId]]= messagingEvent.postback.payload
+              }
+              get_user_profile(context, num_message, messagingEvent, receivedCallback);
+            }
+
+
+            else if (messagingEvent.read){
+              // Event qui signifie que le message a été lu par le user
+            }
+            else if (messagingEvent.message && messagingEvent.message.is_echo){
+              // Event qui rappelle  le message qui a été envoyé par le serveur node.js
             }
             else if (messagingEvent.delivery){
-                console.log("User has received our message");
+              // Event pour message bien délivré
             }
             else{
-                // console.log('context avant:', context)
-                if (!context[messagingEvent.sender.id]){
-                    context[messagingEvent.sender.id] = {};
-                    context[messagingEvent.sender.id].reponses = {};
-                    num_message[messagingEvent.sender.id] = 0;
-                }
-                else {
-                    num_message[messagingEvent.sender.id] += 1;
-                }
-                // console.log('context apres:', context)
-                console.log('__________________________________________ message n°:', num_message[messagingEvent.sender.id], ' _____________________________________________');
-
-                get_user_profile(context, num_message, messagingEvent, receivedCallback);
-
-
+              console.log("Webhook received unknown messagingEvent: ", messagingEvent);
             }
-
         });
     });
     // Assume all went well.
@@ -106,6 +141,8 @@ app.post('/webhook', function (req, res) {
   }
 });
 
+
+
 function get_user_profile(context, num_message, messagingEvent, receivedCallback){
     if (!context[messagingEvent.sender.id].first_name || typeof context[messagingEvent.sender.id].first_name === 'undefined'){
         var url_user_info = 'https://graph.facebook.com/v2.6/'+messagingEvent.sender.id+'?access_token='+config.FB_PAGE_TOKEN;
@@ -113,9 +150,14 @@ function get_user_profile(context, num_message, messagingEvent, receivedCallback
             if (!error && response.statusCode == 200) {
             context[messagingEvent.sender.id].first_name = JSON.parse(body).first_name;
             context[messagingEvent.sender.id].last_name = JSON.parse(body).last_name;
+            // context[messagingEvent.sender.id].cover = JSON.parse(body).cover;
+            // context[messagingEvent.sender.id].education = JSON.parse(body).education;
+            // context[messagingEvent.sender.id].hometown = JSON.parse(body).hometown;
+            //console.log('-------------- DATA ---------------\n\n\n',JSON.parse(body));
             receivedCallback(messagingEvent);
             }
             else {
+                console.error('Error in get_user_profile')
                 console.error(response);
                 console.error(error);
             }
@@ -125,13 +167,144 @@ function get_user_profile(context, num_message, messagingEvent, receivedCallback
         receivedCallback(messagingEvent);
     }
 }
+
 function receivedCallback(messagingEvent){
-    if (messagingEvent.message) {
-        mainCtrl.receivedMessage(messagingEvent, context[messagingEvent.sender.id], num_message[messagingEvent.sender.id], reset);
+    mainCtrl.receivedMessage(messagingEvent, context[messagingEvent.sender.id], num_message[messagingEvent.sender.id], reset);
+}
+
+function gettingStarted() {
+  request({
+     url: 'https://graph.facebook.com/v2.6/me/thread_settings',
+     qs: { access_token: config.FB_PAGE_TOKEN },
+     method: 'POST',
+     json:{
+         "setting_type":"call_to_actions",
+         "thread_state":"new_thread",
+         "call_to_actions":[
+             {
+                 "payload":"0"
+             }
+         ]
+     }
+   },function(error, response, body){
+     console.log('Boutton démarré dans le pipe')
+     //console.log(error)
+     //console.log(response)
+     //console.log(body)
+   });
+  };
+
+function greetingText(){
+  request({
+     url: 'https://graph.facebook.com/v2.6/me/thread_settings',
+     qs: { access_token: config.FB_PAGE_TOKEN },
+     method: 'POST',
+     json:{
+           "setting_type":"greeting",
+           "greeting":{
+             "text":"Bienvenue chez SFR Red! Comment puis-je vous aider?"
+           }
+     }
+   },function(error, response, body){
+     console.log('Message de bienvenue dans le pipe')
+     //console.log(error)
+     //console.log(response)
+     //console.log(body)
+   });
+}
+
+function linking_account(recipientID){
+  console.log('--------------- On est dans linking account ----------------')
+  request({
+     url: 'https://graph.facebook.com/v2.6/me/thread_settings',
+     qs: { access_token: config.FB_PAGE_TOKEN },
+     method: 'POST',
+     json:{
+            "recipient":{
+            "id":recipientID
+              },
+              "message": {
+                "attachment": {
+                  "type": "template",
+                  "payload": {
+                    "template_type": "generic",
+                    "elements": [{
+                      "title": "Welcome to M-Bank",
+                      "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+                      "buttons": [{
+                        "type": "account_link",
+                        "url": "https://www.google.fr"
+                      }]
+                    }]
+                  }
+                }
+              }
+            }
+          },function(error, response, body) {
+              //console.log(response)
+              if (error) {
+                  console.log('Error LINKING sending messages: ', error)
+              } else if (response.body.error) {
+                  console.log('Error LINKING: ', response.body.error)
+              }
+          });
+        }
+
+function addPersistentMenu(){
+ request({
+    url: 'https://graph.facebook.com/v2.6/me/thread_settings',
+    qs: { access_token: config.FB_PAGE_TOKEN },
+    method: 'POST',
+    json:{
+        "setting_type" : "call_to_actions",
+        "thread_state" : "existing_thread",
+        "call_to_actions":[
+            {
+              "type":"postback",
+              "title":"Parler à un conseiller",
+              "payload":"passer_conseiller"
+            },
+            {
+              "type":"postback",
+              "title":"Nouvelle question",
+              "payload":"nouvelle_question"
+            },
+            {
+              "type":"web_url",
+              "title":"Site web",
+              "url":"https://www.red-by-sfr.fr"
+            }
+        ]
     }
-    else if (messagingEvent.postback) {
-        mainCtrl.receivedPostback(messagingEvent,  context[messagingEvent.sender.id], num_message[messagingEvent.sender.id]);
+}, function(error, response, body) {
+    //console.log(response)
+    if (error) {
+        console.log('Error MENU sending messages: ', error)
+    } else if (response.body.error) {
+        console.log('Error MENU : ', response.body.error)
     }
+  })
+}
+
+function removePersistentMenu(){
+ request({
+    url: 'https://graph.facebook.com/v2.6/me/thread_settings',
+    qs: { access_token: config.FB_PAGE_TOKEN },
+    method: 'POST',
+    json:{
+        setting_type : "call_to_actions",
+        thread_state : "existing_thread",
+        call_to_actions:[ ]
+    }
+
+}, function(error, response, body) {
+    console.log(response)
+    if (error) {
+        console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+        console.log('Error: ', response.body.error)
+    }
+})
 }
 
 // Start server

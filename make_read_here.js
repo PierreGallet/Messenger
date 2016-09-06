@@ -1,129 +1,256 @@
 // automating node creation with postback (decision trees with multiple choices)
+// Créer automatiquement la réponse à donner après avoir cliqué sur un bouton ou generic qui generer un postback et payload
+
 var config = require('./config');
 var fs = require('fs');
 
 function addslashes(ch) {
-    // ch = ch.replace(/\\/g,"\\\\");
-    ch = ch.replace(/\'/g,"\\'");
-    ch = ch.replace(/\"/g,"\\\"");
-    // ch = ch.replace(/\\n/g, "\n");
+    // ch = ch.replace(/\'/g,"\\'");
+    // ch = ch.replace(/\"/g,"\\\"");
+    // ch = ch.replace(/\\n/g,"\n");
     return ch;
 }
 
-function button_read_here_begin(title, output, payload){
-    var code = '';
-    code += 'else if (payload == "' + payload + '") {\n';
-    code += '   sendCallback("text", "' + title.text + '", senderId);\n';
-    code += '   output = {};\n';
-    code += '   output.text = "' + addslashes(output.text) + '";\n';
-    code += '   output.proposals = [';
-    code += '\n       {"type":"postback",\n';
-    code += '       "title":"Page suivante",\n';
-    code += '       "payload":"' + payload + '#' + '"}';
+function button_read_here_begin(title, output, payload,json_results){
+
+    json_results[payload]={};
+    json_results[payload].text={};
+    json_results[payload].text.output=title.text;
+    json_results[payload].button={};
+    json_results[payload].button.output={};
+    json_results[payload].button.output.text= addslashes(output.text);
+    json_results[payload].button.output.proposals= [];
+    json_results[payload].button.output.proposals[0]={};
+    json_results[payload].button.output.proposals[0].type="postback";
+    json_results[payload].button.output.proposals[0].title="Page suivante";
+    json_results[payload].button.output.proposals[0].payload=payload+'#';
     if(output.link){
-        for (var i in output.link){
-            code += ',';
-            code += '\n       {"type":"web_url",\n';
-            code += '       "title":"'+ addslashes(output.button[i]) + '",\n';
-            code += '       "url":"' + output.link[i] + '"}';
-        }
+      for (var i in output.link){
+        var a = {};
+        a.type ="web_url";
+        a.title = addslashes(output.button[i]);
+        a.url = output.link[i];
+        json_results[payload].button.output.proposals.push(a);
+      }
     }
-    code += '\n   ];\n';
-    code += '   sendCallback("button", output, senderId);\n';
+    var b = {};
+    b.type = "postback";
+    b.title = "STOP";
+    b.payload = "stop";
+    json_results[payload].button.output.proposals.push(b);
     if(output.img){
-        output.img.forEach(function(img){
-            code += '   sendCallback("image", "' + img + '", senderId);\n';
-        });
+      json_results[payload].image={};
+      json_results[payload].image.output=[];
+      output.img.forEach(function(img){
+        json_results[payload].image.output.push(img);
+      });
     }
-    code += '}';
-    return console.log(code);
+    return json_results;
 }
 
-function button_read_here(output, payload){
-    var code = '';
-    code += 'else if (payload == "' + payload + '") {\n';
-    code += '   output = {};\n';
-    code += '   output.text = "' + addslashes(output.text) + '";\n';
-    code += '   output.proposals = [';
-    code += '\n       {"type":"postback",\n';
-    code += '       "title":"Page suivante",\n';
-    code += '       "payload":"' + payload + '#' + '"}';
-    if(output.link){
-        for (var i in output.link){
-            code += ',';
-            code += '\n       {"type":"web_url",\n';
-            code += '       "title":"'+ addslashes(output.button[i]) + '",\n';
-            code += '       "url":"' + output.link[i] + '"}';
-        }
+    // var code = '';
+    // code += 'else if (payload == "' + payload + '") {\n';
+    // code += '   sendCallback("text", "' + title.text + '", senderId);\n';
+    // code += '   output = {};\n';
+    // code += '   output.text = "' + addslashes(output.text) + '";\n';
+    // code += '   output.proposals = [';
+    // code += '\n       {"type":"postback",\n';
+    // code += '       "title":"Page suivante",\n';
+    // code += '       "payload":"' + payload + '#' + '"}';
+    // if(output.link){
+    //     for (var i in output.link){
+    //         code += ',';
+    //         code += '\n       {"type":"web_url",\n';
+    //         code += '       "title":"'+ addslashes(output.button[i]) + '",\n';
+    //         code += '       "url":"' + output.link[i] + '"}';
+    //     }
+    // }
+    // code += ',\n'
+    // code += '       {"type":"postback",\n'
+    // code += '       "title":"STOP",\n'
+    // code += '       "payload":"stop"}'
+    // code += '\n   ];\n';
+    // code += '   sendCallback("button", output, senderId);\n';
+    // if(output.img){
+    //     output.img.forEach(function(img){
+    //         code += '   sendCallback("image", "' + img + '", senderId);\n';
+    //     });
+    // }
+    // code += '}';
+
+
+function button_read_here(output, payload,json_results){
+
+  json_results[payload]={};
+  json_results[payload].button={};
+  json_results[payload].button.output={};
+  json_results[payload].button.output.text= addslashes(output.text);
+  json_results[payload].button.output.proposals= [];
+  json_results[payload].button.output.proposals[0]={};
+  json_results[payload].button.output.proposals[0].type="postback";
+  json_results[payload].button.output.proposals[0].title="Page suivante";
+  json_results[payload].button.output.proposals[0].payload=payload+'#';
+  if(output.link){
+    for (var i in output.link){
+      var a = {};
+      a.type ="web_url";
+      a.title = addslashes(output.button[i]);
+      a.url = output.link[i];
+      json_results[payload].button.output.proposals.push(a);
     }
-    code += '\n   ];\n';
-    code += '   sendCallback("button", output, senderId);\n';
-    if(output.img){
-        output.img.forEach(function(img){
-            code += '   sendCallback("image", "' + img + '", senderId);\n';
-        });
-    }
-    code += '}';
-    return console.log(code);
+  }
+  var b = {};
+  b.type = "postback";
+  b.title = "STOP";
+  b.payload = "stop";
+  json_results[payload].button.output.proposals.push(b);
+  if(output.img){
+    json_results[payload].image={};
+    json_results[payload].image.output=[];
+    output.img.forEach(function(img){
+      json_results[payload].image.output.push(img);
+    });
+  }
+  return json_results;
 }
 
-function button_read_here_end(output, payload){
-    var code = '';
-    code += 'else if (payload == "' + payload + '") {\n';
+    //
+    // var code = '';
+    // code += 'else if (payload == "' + payload + '") {\n';
+    // code += '   output = {};\n';
+    // code += '   output.text = "' + addslashes(output.text) + '";\n';
+    // code += '   output.proposals = [';
+    // code += '\n       {"type":"postback",\n';
+    // code += '       "title":"Page suivante",\n';
+    // code += '       "payload":"' + payload + '#' + '"}';
+    // if(output.link){
+    //     for (var i in output.link){
+    //         code += ',';
+    //         code += '\n       {"type":"web_url",\n';
+    //         code += '       "title":"'+ addslashes(output.button[i]) + '",\n';
+    //         code += '       "url":"' + output.link[i] + '"}';
+    //     }
+    // }
+    // code += ',\n'
+    // code += '       {"type":"postback",\n'
+    // code += '       "title":"STOP",\n'
+    // code += '       "payload":"stop"}'
+    // code += '\n   ];\n';
+    // code += '   sendCallback("button", output, senderId);\n';
+    // if(output.img){
+    //     output.img.forEach(function(img){
+    //         code += '   sendCallback("image", "' + img + '", senderId);\n';
+    //     });
+    // }
+    // code += '}';
+
+
+function button_read_here_end(output, payload,json_results){
+
+    json_results[payload]={};
+    json_results[payload].button={};
+    json_results[payload].button.output={};
+    json_results[payload].button.output.text= addslashes(output.text);
+    json_results[payload].button.output.proposals= [];
+
     if(output.link){
-        code += '   output = {};\n';
-        code += '   output.text = "' + addslashes(output.text) + '";\n';
-        code += '   output.proposals = [';
-        for (var i in output.link){
-            if(i !== 0){
-                code += ',';
-            }
-            code += '\n       {"type":"web_url",\n';
-            code += '       "title":"'+ addslashes(output.button[i]) + '",\n';
-            code += '       "url":"' + output.link[i] + '"}';
-        }
-        code += '\n   ];\n';
-        code += '   sendCallback("button", output, senderId);\n';
-    }
-    else {
-        code += '   output = "' + addslashes(output.text) + '";\n';
-        code += '   sendCallback("text", output, senderId);\n';
+      for (var i in output.link){
+        var a = {};
+        a.type ="web_url";
+        a.title = addslashes(output.button[i]);
+        a.url = output.link[i];
+        json_results[payload].button.output.proposals.push(a);
+      }
     }
     if(output.img){
-        output.img.forEach(function(img){
-            code += '   sendCallback("image", "' + img + '", senderId);\n';
-        });
+      json_results[payload].image={};
+      json_results[payload].image.output=[];
+      output.img.forEach(function(img){
+        json_results[payload].image.output.push(img);
+      });
     }
-    code += '}';
-    return console.log(code);
+    return json_results;
 }
+
+//     var code = '';
+//     code += 'else if (payload == "' + payload + '") {\n';
+//         code += '   output = {};\n';
+//         code += '   output.text = "' + addslashes(output.text) + '";\n';
+//         code += '   output.proposals = [';
+//         if(output.link){
+//           for (var i in output.link){
+//               if(i !== 0){
+//                   code += ',';
+//               }
+//               code += '\n       {"type":"web_url",\n';
+//               code += '       "title":"'+ addslashes(output.button[i]) + '",\n';
+//               code += '       "url":"' + output.link[i] + '"}';
+//               code += ',\n'
+//           }
+//         }
+//         else{
+//
+//         }
+//     code += '\n       {"type":"postback",\n'
+//     code += '       "title":"STOP",\n'
+//     code += '       "payload":"stop"}'
+//     code += '\n   ];\n';
+//     code += '   sendCallback("button", output, senderId);\n';
+//     //
+//     // else {
+//     //     code += '   output = "' + addslashes(output.text) + '";\n';
+//     //     code += '   sendCallback("text", output, senderId);\n';
+//     // }
+//     if(output.img){
+//         output.img.forEach(function(img){
+//             code += '   sendCallback("image", "' + img + '", senderId);\n';
+//         });
+//     }
+//     code += '}';
+// }
 
 //////////////// to make next page button in main controller where there is a postback
 function make_read_here(path='./link2answer.json'){
     fs.readFile(path, (err, data) => {
 
-        json = JSON.parse(data);
+      var dir = './scripts';
+      var filepath = './scripts/payback.json'
 
-        Object.keys(json).forEach(function(link){
-            for (var j in json[link]){
+      if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+      };
+      if (!fs.existsSync(filepath)){
+        fs.openSync(filepath, 'w');
+      };
+
+      var json_results ={};
+
+      var json_data = JSON.parse(data);
+
+
+        Object.keys(json_data).forEach(function(link){
+            for (var j in json_data[link]){
+              //console.log('j',typeof(j))
                 if(j == 0){
                     // do nothing, title will be send at j == 1
                     continue;
                 }
                 else if (j == 1){
                     payload = link + '#'.repeat(j-1);
-                    button_read_here_begin(json[link][j-1], json[link][j], payload)
+                    json_results = button_read_here_begin(json_data[link][j-1], json_data[link][j], payload,json_results)
                 }
-                else if(json[link][String(parseInt(j)+1)]){
+                else if(json_data[link][String(parseInt(j)+1)]){
+                    //console.log(j,String(parseInt(j)+1))
                     payload = link + '#'.repeat(j-1);
-                    button_read_here(json[link][j], payload);
+                    json_results = button_read_here(json_data[link][j], payload,json_results);
                 }
                 else{
                     payload = link + '#'.repeat(j-1);
-                    button_read_here_end(json[link][j], payload);
+                    json_results = button_read_here_end(json_data[link][j], payload,json_results);
                 }
             }
         });
+        fs.writeFileSync("./scripts/payback.json", JSON.stringify(json_results,null,4),'utf8');
     });
 }
 
