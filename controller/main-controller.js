@@ -41,12 +41,22 @@ function receivedMessage(event, context, num_message, reset) {
         // If we receive a text message, check to see if it matches any special
         // keywords and send back the corresponding example. Otherwise, call the python script
 
-
-        if(num_message==0 || context.reponses[num_message-1]=="Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question."){
-          var output = {};
+        if(num_message==0){
           introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
           introduction2 = "Je suis Reddie, votre assistant virtuel :)";
-          introduction3 = "Je vais vous poser plusieurs questions pour résoudre votre problème plus rapidement B-) Mais rassurez-vous, mes collègues humains prendront le relai si besoin :) ";
+          //introduction3 = "Tout d'abord veuillez vous connecter à votre compte Red SFR :)";
+
+          sendTextMessage(senderId, introduction);
+          sendTextMessage(senderId, introduction2);
+          //sendTextMessage(senderId, introduction3);
+          sendAccountLinking(senderId);
+
+          context.reponses[num_message] = introduction;
+        }
+
+        else if(num_message==1 || context.reponses[num_message-1]=="Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question."){
+          var output = {};
+          introduction = "Je vais vous poser plusieurs questions pour résoudre votre problème plus rapidement B-) Mais rassurez-vous, mes collègues humains prendront le relai si besoin :) ";
           output.text = "Tout d'abord, vous êtes client...";
           output.proposals = [
               {"title":"Forfait Mobile",
@@ -92,18 +102,14 @@ function receivedMessage(event, context, num_message, reset) {
           //        "title":"Lire ici",
           //        "payload":"payloadOuiGiveInfos"}]
           //     }]
-          sendTextMessage(senderId, introduction);
+        sendTextMessage(senderId, introduction);
+        setTimeout(function(){
+          sendCallback("text", output.text, senderId);
           setTimeout(function(){
-             sendTextMessage(senderId, introduction2);
-             setTimeout(function(){
-                 sendTextMessage(senderId, introduction3);
-                 setTimeout(function(){
-                     //sendQuickReply(senderId, output.text, output.proposals);
-                     sendCallback("text", output.text, senderId);
-                     sendCallback("generic", output, senderId);
-                 }, 1500);
-             }, 1500);
+            sendCallback("generic", output, senderId);
           }, 1500);
+        },1500);
+
 
 
           if (output.text){
@@ -124,127 +130,6 @@ function receivedMessage(event, context, num_message, reset) {
         }
     }
 }
-
-// function receivedPostback(event, context, num_message) {
-//     var senderId = event.sender.id;
-//     var recipientId = event.recipient.id;
-//     var timeOfPostback = event.timestamp;
-//
-//     // The 'payload' param is a developer-defined field which is set in a postback
-//     // button for Structured Messages.
-//     var payload = event.postback.payload;
-//     //console.log(payload);
-//     var output = '';
-//     if (payload == "payloadOuiGiveInfos") {
-//       output = "Nous avons bien enregistré vos informations et transmettons toutes vos infos. Un conseiller va prendre le relai. Merci de patienter";
-//       sendTextMessage(senderId, output);
-//       // output2 = "Voici les infos transmises au conseiller \n"+JSON.stringify(context.questions);
-//       // sendCallback("text",output2,senderId);
-//       // output3 = "Voici les infos transmises au conseiller \n"+JSON.stringify(context.reponses);
-//       // sendCallback("text",output3,senderId);
-//     }
-//     else if (payload == "payloadNonGiveInfos") {
-//         output = "Nous avons mal compris vos informations. Pouvez-nous nous les redonner svp.";
-//         sendTextMessage(senderId, output);
-//     }
-//     else if (payload =='stop'){
-//       output = {};
-//       output.text = "Avez vous trouvé ce que vous cherchiez?";
-//       output.proposals = [
-//           {"content_type":"text",
-//           "title":"oui",
-//           "payload":"finish"},
-//           {"content_type":"text",
-//           "title":"non",
-//           "payload":"passer_conseiller"}];
-//       sendCallback("quick_reply", output, senderId)
-//     }
-//     else if (payload == "payloadOuiIntent") {
-//         output = "Pouvez-vous nous donner votre adresse mail et numéro de téléphone afin de poursuivre la résolution de votre problème s'il-vous-plaît?";
-//         sendTextMessage(senderId, output);
-//     }
-//     else if (payload == "payloadNonIntent") {
-//         output = "Excusez-nous bien, pouvez-vous reformuler votre question s'il-vous-plaît.";
-//         sendTextMessage(senderId, output);
-//     }
-//     else if (payload == "new_forfait") {
-//         output = "Parfait, afin de vérifier votre identité, pouvez vous nous transmettre votre numero de téléphone et votre email?";
-//         sendTextMessage(senderId, output);
-//     }
-//     else if (payload == "help_payload") {
-//         output = "Je suis Rouge, le chatbot de SFR Red. Vous pouvez me poser vos questions, je peux vous proposer des solutions immédiates ou vous rediriger vers un humain plus intelligent que moi!";
-//         sendTextMessage(senderId, output);
-//     }
-//     else if (payload == "passer_conseiller") {
-//         output = "Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relai ;) Pouvez-vous lui détailler un peu plus votre problème :) ?";
-//         sendCallback("text", output, senderId);
-//     }
-//     else if (payload == "nouvelle_question") {
-//         output ={};
-//         output.text = "Vous nous contacter en ce qui concerne:";
-//         output.proposals = [
-//            {"content_type":"text",
-//            "title":"Forfait Mobile",
-//            "payload":"0_0"},
-//            {"content_type":"text",
-//            "title":"Fibre, Box",
-//            "payload":"0_1"},
-//            {"content_type":"text",
-//            "title":"Pas encore Client",
-//            "payload":"0_2"}
-//         ];
-//         sendQuickReply(senderId, output.text, output.proposals);
-//     }
-//
-//     else if (payload == "0") {
-//        output = {};
-//        introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
-//        introduction2 = "Je suis Rouge, le bot de SFR Red.";
-//        introduction3 = "Je vais vous poser plusieurs questions pour mieux cerner ce qui vous amène ici.";
-//        output.text = "Tout d'abord, vous êtes client?";
-//        output.proposals = [
-//           {"content_type":"text",
-//           "title":"Forfait Mobile",
-//           "payload":"0_0"},
-//           {"content_type":"text",
-//           "title":"Fibre, Box",
-//           "payload":"0_1"},
-//           {"content_type":"text",
-//           "title":"Pas encore Client",
-//           "payload":"0_2"}
-//        ];
-//        sendTextMessage(senderId, introduction);
-//        setTimeout(function(){
-//            sendTextMessage(senderId, introduction2);
-//            setTimeout(function(){
-//                sendTextMessage(senderId, introduction3);
-//                setTimeout(function(){
-//                    sendQuickReply(senderId, output.text, output.proposals);
-//                }, 1500);
-//            }, 1500);
-//        }, 1500);
-//     }
-//
-//     else {
-//       //try{
-//       output = nodeCtrl.load_node('payback',payload,senderId,sendCallback);
-//       //}
-//       // finally{
-//       //   // Message d'erreur pour payload non connu
-//       //   sendTextMessage(senderId, "~~~~DEV ERROR~~~~        in main-controller\n question non encore implémentée ou payload non reconnu");
-//       //
-//       // }  // Message d'erreur pour payload non connu
-//     }
-//
-//     // on enregistre les reponses
-//     if (output.text){
-//         context.reponses[num_message] = output.text;
-//     }
-//     else {
-//         context.reponses[num_message] = output;
-//     }
-//     console.log('\n Contexte après réception message %s: \n',num_message,context);
-// }
 
 
 
@@ -409,6 +294,46 @@ function sendTypingOff(senderId) {
   callSendAPI(messageData);
 }
 
+function sendAccountLinking(senderId) {
+  console.log("Inside sendAccountLinking ");
+
+  var messageData = {
+    recipient: {
+      id: senderId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "Tout d'abord veuillez vous connecter à votre compte Red SFR :)",
+          buttons:[{
+            type: "account_link",
+            url: config.SERVER_URL + "/authorize",
+          }]
+        }
+      }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+function receivedAccountLink(event) {
+  console.log("receivedAccountLink");
+  var senderId = event.sender.id;
+  var recipientId = event.recipient.id;
+
+  var status = event.account_linking.status;
+  var authCode = event.account_linking.authorization_code;
+
+  console.log("Received account link event with for user %d with status %s " +
+    "and auth code %s ", senderId, status, authCode);
+  sendTextMessage(senderId, "Vous vous êtes correctement connecté :)");
+
+
+}
+
 // callSendAPI calls the Send API and effectively send the message through messenger.
 function callSendAPI(messageData) {
     //console.log(messageData);
@@ -445,3 +370,4 @@ exports.sendQuickReply = sendQuickReply;
 exports.receivedMessage = receivedMessage;
 //exports.receivedPostback = receivedPostback;
 exports.sendCallback = sendCallback;
+exports.receivedAccountLink = receivedAccountLink;

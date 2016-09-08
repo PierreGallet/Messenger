@@ -19,5 +19,8 @@
     "morgan": "^1.7.0",
     "python-shell": "^0.4.0",
     "request": "^2.74.0"
+  },
+  "engines": {
+    "node": "6.2.2"
   }
 }

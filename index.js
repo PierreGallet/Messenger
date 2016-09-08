@@ -27,13 +27,20 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
 // this variable will store the context for each senderId
 var context = {};
 var num_message = {};
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
+app.get('/', function(req, res){
+    res.sendFile('index.html', { root: __dirname + "/public" } );
 });
+
+// app.get('/', function (req, res) {
+//   res.send('Hello World!');
+// });
 
 var reset = function(senderId) {
     context[senderId] = {};
@@ -41,19 +48,19 @@ var reset = function(senderId) {
     num_message[senderId] = -1;
 };
 
-app.use(express.static(__dirname + '/public'));
+//app.use(express.static(__dirname + '/public'));
 
-// app.get('/assets', function(req, res){
-//     res.send('Hello World!');
-//     console.log(req);
-//     console.log(res);
-// });
+app.use(express.static(__dirname + '/views'));
+app.use(express.static('public'));
+// app.use(express.static(__dirname + '/views/assets/fonts'))
+// app.use(express.static(__dirname + '/views/assets/img'))
+// app.use(express.static(__dirname + '/views/assets/js'))
 
-console.log(path.join(__dirname, './public/assets/logo.jpg'))
 
-// app.get('/lol',function(req, res){
-//   res.sendFile(path.join(__dirname, './public/assets/logo.jpg'));
-// });
+
+//console.log(path.join(__dirname, './public/assets/logo.jpg'))
+
+
 
 app.get('/webhook', function(req, res) {
     //console.log('request:', req);
@@ -69,6 +76,30 @@ app.get('/webhook', function(req, res) {
         console.error("Failed validation. Make sure the validation tokens match.");
         res.sendStatus(403);
     }
+});
+
+app.get('/authorize', function(req, res) {
+  console.log("\n\n In the app.get /authorize \n\n" )
+  var accountLinkingToken = req.query['account_linking_token'];
+  var redirectURI = req.query['redirect_uri'];
+  console.log("accountLinkingToken",accountLinkingToken);
+  console.log("redirectURI",redirectURI);
+
+
+  // Authorization Code should be generated per user by the developer. This will
+  // be passed to the Account Linking callback.
+  var authCode = "1234567890";
+
+  // Redirect users to this URI on successful login
+  var redirectURISuccess = redirectURI + "&authorization_code=" + authCode;
+
+  //res.render('index', { title: 'gogogogo'});
+
+  res.render('index', {
+    // accountLinkingToken: accountLinkingToken,
+    //redirectURI: redirectURI,
+    redirectURISuccess: redirectURISuccess
+  });
 });
 
 app.post('/webhook', function (req, res) {
@@ -108,11 +139,9 @@ app.post('/webhook', function (req, res) {
               console.log('messagingEvent :',messagingEvent)
 
               try{
-                console.log('In the try')
                 context[senderId].questions[num_message[senderId]]= message.text
               }
               catch(e) {
-                console.log('Postback')
                 context[senderId].questions[num_message[senderId]]= messagingEvent.postback.payload
               }
               get_user_profile(context, num_message, messagingEvent, receivedCallback);
@@ -127,6 +156,10 @@ app.post('/webhook', function (req, res) {
             }
             else if (messagingEvent.delivery){
               // Event pour message bien délivré
+            }
+            else if(messagingEvent.account_linking){
+              console.log('Linking account :',messagingEvent);
+              mainCtrl.receivedAccountLink(messagingEvent);
             }
             else{
               console.log("Webhook received unknown messagingEvent: ", messagingEvent);
