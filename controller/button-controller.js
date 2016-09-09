@@ -26,11 +26,8 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
     if (payload == "payloadOuiGiveInfos") {
       output = "Nous avons bien enregistré vos informations. Un conseiller va prendre le relai. Pour vous faire patienter, je vous propose le nouveau clip Red";
       sendCallback("text", output, senderId);
-      sendCallback('video', config.ngrok_url +'/assets/clip.mp4', senderId)
-      // output2 = "Voici les infos transmises au conseiller \n"+JSON.stringify(context.questions);
-      // sendCallback("text",output2,senderId);
-      // output3 = "Voici les infos transmises au conseiller \n"+JSON.stringify(context.reponses);
-      // sendCallback("text",output3,senderId);
+      sendCallback('video', '/assets/clip.mp4', senderId)
+
     }
     else if (payload == "payloadNonGiveInfos") {
         output = "Nous avons mal compris vos informations. Pouvez vous nous les transmettre à nouveau?";
@@ -139,7 +136,7 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
     }
 
     else {
-        output = nodeCtrl.load_node(payload,senderId,sendCallback);
+        output = nodeCtrl.load_node(payload, senderId, sendCallback);
     }
 
     // on enregistre les reponses

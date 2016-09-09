@@ -11,7 +11,7 @@ function addslashes(ch) {
     return ch;
 }
 
-function button_read_here_begin(title, output, payload,json_results){
+function button_read_here_begin(title, output, payload, json_results){
 
     json_results[payload]={};
     json_results[payload].text={};
@@ -19,19 +19,24 @@ function button_read_here_begin(title, output, payload,json_results){
     json_results[payload].button={};
     json_results[payload].button.output={};
     json_results[payload].button.output.text= addslashes(output.text);
-    json_results[payload].button.output.proposals= [];
-    json_results[payload].button.output.proposals[0]={};
+    json_results[payload].button.output.proposals = [];
+    json_results[payload].button.output.proposals[0] = {};
     json_results[payload].button.output.proposals[0].type="postback";
     json_results[payload].button.output.proposals[0].title="Page suivante";
     json_results[payload].button.output.proposals[0].payload=payload+'#';
-    if(output.link){
-      for (var i in output.link){
-        var a = {};
-        a.type ="web_url";
-        a.title = addslashes(output.button[i]);
-        a.url = output.link[i];
-        json_results[payload].button.output.proposals.push(a);
-      }
+    if(output.link) {
+        json_results[payload].generic = {};
+        json_results[payload].generic.output = {};
+        json_results[payload].generic.output.proposals = [];
+        for (var i = 0 ; i < output.link.length; i++){
+            json_results[payload].generic.output.proposals[i] = {};
+            json_results[payload].generic.output.proposals[i].title = addslashes(output.button[i]);
+            json_results[payload].generic.output.proposals[i].buttons = [];
+            json_results[payload].generic.output.proposals[i].buttons[0] = {};
+            json_results[payload].generic.output.proposals[i].buttons[0].type = "web_url";
+            json_results[payload].generic.output.proposals[i].buttons[0].title = "Cliquez ici";
+            json_results[payload].generic.output.proposals[i].buttons[0].url = output.link[i];
+        }
     }
     var b = {};
     b.type = "postback";
@@ -47,6 +52,8 @@ function button_read_here_begin(title, output, payload,json_results){
     }
     return json_results;
 }
+
+
 
     // var code = '';
     // code += 'else if (payload == "' + payload + '") {\n';
@@ -90,14 +97,19 @@ function button_read_here(output, payload,json_results){
   json_results[payload].button.output.proposals[0].type="postback";
   json_results[payload].button.output.proposals[0].title="Page suivante";
   json_results[payload].button.output.proposals[0].payload=payload+'#';
-  if(output.link){
-    for (var i in output.link){
-      var a = {};
-      a.type ="web_url";
-      a.title = addslashes(output.button[i]);
-      a.url = output.link[i];
-      json_results[payload].button.output.proposals.push(a);
-    }
+  if(output.link) {
+      json_results[payload].generic = {};
+      json_results[payload].generic.output = {};
+      json_results[payload].generic.output.proposals = [];
+      for (var i = 0 ; i < output.link.length; i++){
+          json_results[payload].generic.output.proposals[i] = {};
+          json_results[payload].generic.output.proposals[i].title = addslashes(output.button[i]);
+          json_results[payload].generic.output.proposals[i].buttons = [];
+          json_results[payload].generic.output.proposals[i].buttons[0] = {};
+          json_results[payload].generic.output.proposals[i].buttons[0].type = "web_url";
+          json_results[payload].generic.output.proposals[i].buttons[0].title = "Cliquez ici";
+          json_results[payload].generic.output.proposals[i].buttons[0].url = output.link[i];
+      }
   }
   var b = {};
   b.type = "postback";
@@ -153,15 +165,25 @@ function button_read_here_end(output, payload,json_results){
     json_results[payload].button.output.text= addslashes(output.text);
     json_results[payload].button.output.proposals= [];
 
-    if(output.link){
-      for (var i in output.link){
-        var a = {};
-        a.type ="web_url";
-        a.title = addslashes(output.button[i]);
-        a.url = output.link[i];
-        json_results[payload].button.output.proposals.push(a);
-      }
+    if(output.link) {
+        json_results[payload].generic = {};
+        json_results[payload].generic.output = {};
+        json_results[payload].generic.output.proposals = [];
+        for (var i = 0 ; i < output.link.length; i++){
+            json_results[payload].generic.output.proposals[i] = {};
+            json_results[payload].generic.output.proposals[i].title = addslashes(output.button[i]);
+            json_results[payload].generic.output.proposals[i].buttons = [];
+            json_results[payload].generic.output.proposals[i].buttons[0] = {};
+            json_results[payload].generic.output.proposals[i].buttons[0].type = "web_url";
+            json_results[payload].generic.output.proposals[i].buttons[0].title = "Cliquez ici";
+            json_results[payload].generic.output.proposals[i].buttons[0].url = output.link[i];
+        }
     }
+    var b = {};
+    b.type = "postback";
+    b.title = "STOP";
+    b.payload = "stop";
+    json_results[payload].button.output.proposals.push(b);
     if(output.img){
       json_results[payload].image={};
       json_results[payload].image.output=[];
@@ -213,40 +235,43 @@ function button_read_here_end(output, payload,json_results){
 function make_read_here(path='./link2answer.json'){
     fs.readFile(path, (err, data) => {
 
-      var dir = './scripts';
-      var filepath = './scripts/payback.json'
+        var dir = './scripts';
+        var filepath = './scripts/payback.json';
 
-      if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
-      };
-      if (!fs.existsSync(filepath)){
-        fs.openSync(filepath, 'w');
-      };
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir);
+        }
+        if (!fs.existsSync(filepath)){
+            fs.openSync(filepath, 'w');
+        }
 
-      var json_results ={};
+        var json_results = {};
 
-      var json_data = JSON.parse(data);
+        var json_data = JSON.parse(data);
 
+        newlink = fs.readFileSync('./link2newlink.json');
+        newlink = JSON.parse(data);
 
         Object.keys(json_data).forEach(function(link){
             for (var j in json_data[link]){
               //console.log('j',typeof(j))
+
                 if(j == 0){
                     // do nothing, title will be send at j == 1
                     continue;
                 }
                 else if (j == 1){
                     payload = link + '#'.repeat(j-1);
-                    json_results = button_read_here_begin(json_data[link][j-1], json_data[link][j], payload,json_results)
+                    json_results = button_read_here_begin(json_data[link][j-1], json_data[link][j], payload, json_results);
                 }
                 else if(json_data[link][String(parseInt(j)+1)]){
                     //console.log(j,String(parseInt(j)+1))
                     payload = link + '#'.repeat(j-1);
-                    json_results = button_read_here(json_data[link][j], payload,json_results);
+                    json_results = button_read_here(json_data[link][j], payload, json_results);
                 }
                 else{
                     payload = link + '#'.repeat(j-1);
-                    json_results = button_read_here_end(json_data[link][j], payload,json_results);
+                    json_results = button_read_here_end(json_data[link][j], payload, json_results);
                 }
             }
         });

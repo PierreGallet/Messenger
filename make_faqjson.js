@@ -218,7 +218,7 @@ ending_node(['Consulter nos fiches aide & conseils', 'Consulter nos fiches aide 
                   ["Consulter les démarches utiles pour résilier votre forfait", "Retrouver toute l'Assistance RED", "Retrouver la Communauté dédiée RED by SFR"],
                   ['http://communaute.red-by-sfr.fr/t5/FAQ/Résiliation-d-une-offre-RED/ta-p/2529', 'http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ', 'http://communaute.red-by-sfr.fr/t5/Aide-et-Conseils/ct-p/aide-et-conseils'],
                   ['', '', ''],
-                  '0_0_0_2_2');
+                  '0_0_0_2_3');
 
 ending_node(['Consulter nos fiches aide & conseils', 'Consulter la communauté Red', 'Accéder à la boutique en ligne'],
                   ["Comment suivre ou annuler votre commande ?", "Retrouver la Communauté dédiée RED by SFR", "Votre suivi de commande RED by SFR"],

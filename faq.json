@@ -106,6 +106,32 @@
                     "title": [
                         "Consulter nos fiches aide & conseils",
                         "Consulter nos fiches aide & conseils",
+                        "Consulter nos fiches aide & conseils",
+                        "Consulter la communauté Red"
+                    ],
+                    "subtitle": [
+                        "Comment changer de mobile ?",
+                        "Consulter les démarches utiles pour résilier votre forfait",
+                        "Retrouver toute l'Assistance RED",
+                        "Retrouver la Communauté dédiée RED by SFR"
+                    ],
+                    "link": [
+                        "http://communaute.red-by-sfr.fr/t5/FAQ/Comment-changer-de-mobile/ta-p/64",
+                        "http://communaute.red-by-sfr.fr/t5/FAQ/Comment-résilier-une-offre-RED-by-SFR/ta-p/2529",
+                        "http://communaute.red-by-sfr.fr/t5/FAQ/tkb-p/FAQ",
+                        "http://communaute.red-by-sfr.fr/t5/Aide-et-Conseils/ct-p/aide-et-conseils"
+                    ],
+                    "img_link": [
+                        "/assets/faq.png",
+                        "/assets/faq.png",
+                        "/assets/faq.png",
+                        "/assets/communaute.jpg"
+                    ]
+                },
+                "J'ai une autre raison": {
+                    "title": [
+                        "Consulter nos fiches aide & conseils",
+                        "Consulter nos fiches aide & conseils",
                         "Consulter la communauté Red"
                     ],
                     "subtitle": [
@@ -123,8 +149,7 @@
                         "/assets/faq.png",
                         "/assets/communaute.jpg"
                     ]
-                },
-                "J'ai une autre raison": {}
+                }
             },
             "Ajouter, résilier une option": {
                 "title": [

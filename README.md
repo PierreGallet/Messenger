@@ -24,7 +24,7 @@ var config = {};
 
 config.FB_VERIFY_TOKEN = "VERIFY_TOKEN";
 config.FB_PAGE_TOKEN="ACCESS_TOKEN";
-config.ngrok_url = "WEBHOOK_URL";
+config.SERVER_URL = "WEBHOOK_URL";
 config.port = 8888;
 
 config.pythonScriptsPath = "PATH_TO_PYTHON_SCRIPT";

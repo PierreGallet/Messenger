@@ -52,14 +52,14 @@ function parsingJSON(json, context, num_message, senderId, sendCallback, reset) 
 
     if(context.reponses[num_message-1]=="Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relai ;) Pouvez-vous lui détailler un peu plus votre problème :) ?"){
 
-      context.probleme = json.message
-      context.classification_agent = json.intent[0]
-      context.accuracy = json.accuracy[0]
-      context.humeur = 'neutre'
+      context.probleme = json.message;
+      context.classification_agent = json.intent[0];
+      context.accuracy = json.accuracy[0];
+      context.humeur = 'neutre';
 
 
-      output = "Nous avons bien pris en compte votre problème. Avant de passer la main à un conseiller, nous aurions besoin de votre email et numéro de téléphone"
-      sendCallback("text", output, senderId)
+      output = "Nous avons bien pris en compte votre problème. Avant de passer la main à un conseiller, nous aurions besoin de votre email et numéro de téléphone";
+      sendCallback("text", output, senderId);
     }
 
     else if (context.reponses[num_message-1]=="Nous avons bien pris en compte votre problème. Avant de passer la main à un conseiller, nous aurions besoin de votre email et numéro de téléphone" || context.reponses[num_message-1]=="Nous avons mal compris vos informations. Pouvez-nous nous les redonner svp.") {
@@ -76,8 +76,8 @@ function parsingJSON(json, context, num_message, senderId, sendCallback, reset) 
         //if (zipcode && !isSetPhone()) { str = str + "Code Postal : " + zipcode + ". \n\n";}
 
         if (mail || phone) {
-            context.mail = mail
-            context.numero= phone
+            context.mail = mail;
+            context.numero = phone;
             output = {};
             output.text = "Vous nous avez transmis les informations suivantes : \n\n" + str + "Confirmez-vous ces informations?";
             output.proposals = [{
@@ -98,7 +98,7 @@ function parsingJSON(json, context, num_message, senderId, sendCallback, reset) 
 
     else if (context.reponses[num_message-1]=='Nous avons bien enregistré vos informations. Un conseiller va prendre le relai. Pour vous faire patienter, je vous propose le nouveau clip Red' || context.reponses[num_message-1]=="Un conseiller sera bientôt disponible. Merci de patienter svp."){
       output={};
-      output = "Un conseiller sera bientôt disponible. Merci de patienter svp."
+      output = "Un conseiller sera bientôt disponible. Merci de patienter svp.";
       sendCallback("text", output, senderId);
     }
 

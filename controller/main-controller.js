@@ -40,6 +40,12 @@ function receivedMessage(event, context, num_message, reset) {
 
         // If we receive a text message, check to see if it matches any special
         // keywords and send back the corresponding example. Otherwise, call the python script
+        switch (messageText) {
+            case 'aide':
+            case 'help':
+                sendHelpMessage(senderId);
+                break;
+        }
 
 
         // if(num_message==0){
@@ -58,6 +64,7 @@ function receivedMessage(event, context, num_message, reset) {
 
         // Remettre num_message==0 quand on utilisera le log
         if(num_message==0 || context.reponses[num_message-1]=="Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question."){
+
           var output = {};
           introduction = "Je vais vous poser plusieurs questions pour résoudre votre problème plus rapidement B-) Mais rassurez-vous, mes collègues humains prendront le relai si besoin :) ";
           output.text = "Tout d'abord, vous êtes client...";
@@ -84,27 +91,7 @@ function receivedMessage(event, context, num_message, reset) {
                  "payload":"0_2"}]
               }
           ];
-          // output.proposals = [
-          //    {"content_type":"text",
-          //    "title":"Forfait Mobile",
-          //    "payload":"0_0"},
-          //    {"content_type":"text",
-          //    "title":"Fibre, Box",
-          //    "payload":"0_1"},
-          //    {"content_type":"text",
-          //    "title":"Pas encore Client",
-          //    "payload":"0_2"}
-          // ];
-          // output.proposals = [
-          //     {"title":"Depuis l'Espace client",
-          //     "subtitle":"Faire évoluer votre offre mobile",
-          //     "item_url":"https://www.sfr.fr/routage/evoluer-mon-offre",
-          //     "image_url":"https://59387558.ngrok.io/assets/client.png",
-          //     "buttons": [
-          //        {"type":"postback",
-          //        "title":"Lire ici",
-          //        "payload":"payloadOuiGiveInfos"}]
-          //     }]
+
         sendTextMessage(senderId, introduction);
         setTimeout(function(){
           sendCallback("text", output.text, senderId);
@@ -250,7 +237,7 @@ function sendVideoMessage(senderId, videoUrl) {
       attachment: {
         type: "video",
         payload: {
-            url: videoUrl
+            url: config.SERVER_URL + videoUrl
         }
       }
     },
@@ -268,7 +255,7 @@ function sendImageMessage(senderId, imageUrl) {
       attachment: {
         type: "image",
         payload: {
-            url: imageUrl
+            url: config.SERVER_URL + imageUrl
         }
       }
     },
@@ -304,7 +291,7 @@ function sendTypingOff(senderId) {
 }
 
 function sendAccountLinking(senderId) {
-  console.log("Inside sendAccountLinking ");
+  console.log("Inside sendAccountLinking");
 
   var messageData = {
     recipient: {
@@ -375,7 +362,6 @@ function receivedAccountLink(event) {
 // callSendAPI calls the Send API and effectively send the message through messenger.
 function callSendAPI(messageData) {
     //console.log(messageData);
-
     request({
         uri: "https://graph.facebook.com/v2.6/me/messages",
         qs: { access_token: config.FB_PAGE_TOKEN },

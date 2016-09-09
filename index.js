@@ -71,6 +71,7 @@ app.get('/webhook', function(req, res) {
         res.status(200).send(req.query['hub.challenge']);
         gettingStarted();
         greetingText();
+        removePersistentMenu();
         addPersistentMenu();
     } else {
         console.error("Failed validation. Make sure the validation tokens match.");
@@ -82,8 +83,8 @@ app.get('/authorize', function(req, res) {
   console.log("\n\n In the app.get /authorize \n\n" )
   var accountLinkingToken = req.query['account_linking_token'];
   var redirectURI = req.query['redirect_uri'];
-  console.log("accountLinkingToken",accountLinkingToken);
-  console.log("redirectURI",redirectURI);
+  console.log("accountLinkingToken", accountLinkingToken);
+  console.log("redirectURI", redirectURI);
 
 
   // Authorization Code should be generated per user by the developer. This will

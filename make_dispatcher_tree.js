@@ -98,7 +98,7 @@ function make_generic_node_dispatcheur(title_list, subtitle_list, item_url_list,
     tab[i] = {};
     tab[i].title = title_list[z];
     if (image_url_list.length >0){
-      tab[i].image_url = image_url_list[z];
+      tab[i].image_url = config.SERVER_URL + image_url_list[z];
     }
     tab[i].buttons=[];
     tab[i].buttons[0]={};
@@ -129,7 +129,7 @@ function make_generic_node_faq(title_list, subtitle_list, item_url_list, image_u
           tab[i].title = title_list[i];
           tab[i].subtitle = subtitle_list[i];
           tab[i].item_url = item_url_list[i];
-          tab[i].image_url = config.ngrok_url + image_url_list[i];
+          tab[i].image_url = config.SERVER_URL + image_url_list[i];
           if(item_url_list[i] !== ''){
             tab[i].buttons=[];
             tab[i].buttons[0]={};

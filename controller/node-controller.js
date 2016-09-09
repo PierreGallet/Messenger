@@ -65,7 +65,7 @@ function load_node(payload,senderId,sendCallback){
     node = json[payload];
   }
 
-  console.log("le json[payload]",node)
+  console.log("le json[payload] : ",node)
 
     // console.log(Object.keys(node),['generic','text']);
     // console.log(Object.keys(node)[1],['generic','text'][1])
@@ -82,18 +82,18 @@ function load_node(payload,senderId,sendCallback){
     }
 
     else if(Object.keys(node).indexOf("faq") >= 0){
-      console.log("On est dans la partie Faq",node);
+      console.log("On est dans la partie Faq", node);
       console.log()
       sendCallback("text", node['text']['output'], senderId);
-      sendCallback("generic",node['generic']['output'],senderId);
-      doyoufind(sendCallback,senderId);
-      return  node['text']['output']
+      sendCallback("generic", node['generic']['output'], senderId);
+      doyoufind(sendCallback, senderId);
+      return node['text']['output']
     }
 
     else if (Object.keys(node).equals(['text','generic']) || Object.keys(node).equals(['generic','text'])){
       sendCallback("text", node['text']['output'], senderId);
-      sendCallback("generic",node['generic']['output'],senderId);
-      return  node['text']['output']
+      sendCallback("generic", node['generic']['output'], senderId);
+      return node['text']['output']
     }
 
     else if(Object.keys(node).indexOf("button") >= 0){
@@ -101,13 +101,18 @@ function load_node(payload,senderId,sendCallback){
       console.log("Le output qu'on envoie",node['button']['output'])
 
       if(Object.keys(node).indexOf("text") >= 0){
-        sendCallback("text",node['text']['output'],senderId);
+        sendCallback("text", node['text']['output'], senderId);
       }
-      sendCallback("button",node['button']['output'],senderId);
+      sendCallback("button", node['button']['output'], senderId);
       if(Object.keys(node).indexOf("image") >= 0){
         for (var i =0;i<node['image']['output'].length;i++){
-          sendCallback("image",node['image']['output'][i]);
+          sendCallback("image", node['image']['output'][i]);
         }
+      }
+      if(Object.keys(node).indexOf("generic") >= 0){
+          setTimeout(function(){
+              sendCallback("generic", node['generic']['output'], senderId);
+          }, 1000);
       }
       if(Object.keys(node).indexOf("text") >= 0){
         return node['text']['output']
