@@ -24,8 +24,9 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
     var output2;
 
     if (payload == "payloadOuiGiveInfos") {
-      output = "Nous avons bien enregistré vos informations. Un conseiller va prendre le relai. Merci de patienter";
+      output = "Nous avons bien enregistré vos informations. Un conseiller va prendre le relai. Pour vous faire patienter, je vous propose le nouveau clip Red";
       sendCallback("text", output, senderId);
+      sendCallback('video', config.ngrok_url +'/assets/clip.mp4', senderId)
       // output2 = "Voici les infos transmises au conseiller \n"+JSON.stringify(context.questions);
       // sendCallback("text",output2,senderId);
       // output3 = "Voici les infos transmises au conseiller \n"+JSON.stringify(context.reponses);
@@ -46,6 +47,7 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
     else if (payload == "finish") {
         output = "Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question.";
         sendCallback("text", output, senderId);
+        sendCallback("unlinking",{},senderId);
     }
 
     else if (payload == "passer_conseiller") {
@@ -68,16 +70,13 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
 
     else if (payload == "new_forfait") {
         output = "Parfait, afin de vérifier votre identité, pouvez vous nous transmettre votre numero de téléphone et votre email?";
-        sendTextMessage(senderId, output);
+        sendCallback('text',output,senderId);
     }
     else if (payload == "help_payload") {
         output = "Je suis Rouge, le chatbot de SFR Red. Vous pouvez me poser vos questions, je peux vous proposer des solutions immédiates ou vous rediriger vers un humain plus intelligent que moi!";
-        sendTextMessage(senderId, output);
+        sendCallback('text',output,senderId);
     }
-    else if (payload == "passer_conseiller") {
-        output = "Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relai ;) Pouvez-vous lui détailler un peu plus votre problème :) ?";
-        sendCallback("text", output, senderId);
-    }
+
     else if (payload == "nouvelle_question") {
         output ={};
         output.text = "Vous nous contacter en ce qui concerne?";
@@ -92,14 +91,27 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
            "title":"Pas encore Client",
            "payload":"0_2"}
         ];
-        sendQuickReply(senderId, output.text, output.proposals);
+        sendCallback('quick_reply',output,senderId);
+    }
+
+    else if(payload == "0" && num_message == 0 ){
+      introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
+      introduction2 = "Je suis Reddie, votre assistant virtuel :)";
+      //introduction3 = "Tout d'abord veuillez vous connecter à votre compte Red SFR :)";
+
+      sendCallback('text',introduction,senderId);
+      sendCallback('text',introduction2,senderId);
+      sendCallback('linking',{},senderId);
+
+      var output =introduction;
+
     }
 
     else if (payload == "0") {
        output = {};
-       introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
-       introduction2 = "Je suis Rouge, le bot de SFR Red.";
-       introduction3 = "Je vais vous poser plusieurs questions pour mieux cerner ce qui vous amène ici.";
+       //introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
+       //introduction2 = "Je suis Rouge, le bot de SFR Red.";
+       //introduction3 = "Je vais vous poser plusieurs questions pour mieux cerner ce qui vous amène ici.";
        output.text = "Tout d'abord, vous êtes client?";
        output.proposals = [
           {"content_type":"text",
@@ -112,16 +124,18 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
           "title":"Pas encore Client",
           "payload":"0_2"}
        ];
-       sendTextMessage(senderId, introduction);
-       setTimeout(function(){
-           sendTextMessage(senderId, introduction2);
-           setTimeout(function(){
-               sendTextMessage(senderId, introduction3);
-               setTimeout(function(){
-                   sendQuickReply(senderId, output.text, output.proposals);
-               }, 1500);
-           }, 1500);
-       }, 1500);
+       sendCallback('quick_reply',output,senderId);
+
+      //  sendCallback('text',introduction,senderId);
+      //  setTimeout(function(){
+      //      sendCallback('text',introduction2,senderId);
+      //      setTimeout(function(){
+      //          sendCallback('text',introduction3,senderId);
+      //          setTimeout(function(){
+      //               sendCallback('quick_reply',output,senderId);
+      //          }, 1500);
+      //      }, 1500);
+      //  }, 1500);
     }
 
     else {

@@ -96,7 +96,7 @@ function parsingJSON(json, context, num_message, senderId, sendCallback, reset) 
         }
     }
 
-    else if (context.reponses[num_message-1]=='Nous avons bien enregistré vos informations et transmettons toutes vos infos. Un conseiller va prendre le relai. Merci de patienter' || context.reponses[num_message-1]=="Un conseiller sera bientôt disponible. Merci de patienter svp."){
+    else if (context.reponses[num_message-1]=='Nous avons bien enregistré vos informations. Un conseiller va prendre le relai. Pour vous faire patienter, je vous propose le nouveau clip Red' || context.reponses[num_message-1]=="Un conseiller sera bientôt disponible. Merci de patienter svp."){
       output={};
       output = "Un conseiller sera bientôt disponible. Merci de patienter svp."
       sendCallback("text", output, senderId);

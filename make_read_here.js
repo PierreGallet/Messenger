@@ -7,7 +7,7 @@ var fs = require('fs');
 function addslashes(ch) {
     // ch = ch.replace(/\'/g,"\\'");
     // ch = ch.replace(/\"/g,"\\\"");
-    // ch = ch.replace(/\\n/g,"\n");
+    ch = ch.replace(/\\n/g,"\n");
     return ch;
 }
 

@@ -161,6 +161,9 @@ app.post('/webhook', function (req, res) {
               console.log('Linking account :',messagingEvent);
               mainCtrl.receivedAccountLink(messagingEvent);
             }
+            else if(messagingEvent.optin){
+              console.log('Optin :',messagingEvent);
+            }
             else{
               console.log("Webhook received unknown messagingEvent: ", messagingEvent);
             }
@@ -228,6 +231,7 @@ function gettingStarted() {
   };
 
 function greetingText(){
+
   request({
      url: 'https://graph.facebook.com/v2.6/me/thread_settings',
      qs: { access_token: config.FB_PAGE_TOKEN },
