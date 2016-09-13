@@ -66,6 +66,7 @@ function load_node(payload,senderId,sendCallback){
   }
 
   console.log("le json[payload] : ",node)
+  console.log(node['text'])
 
     // console.log(Object.keys(node),['generic','text']);
     // console.log(Object.keys(node)[1],['generic','text'][1])
@@ -120,6 +121,13 @@ function load_node(payload,senderId,sendCallback){
       else{
         return node['button']['output']['text']
     }
+   }
+
+   else if(Object.keys(node).equals(['text'])){
+     console.log('On est dans la partie que texte')
+     console.log(node['text']['output'])
+     sendCallback("text", node['text']['output'], senderId);
+     return node['text']['output']
    }
 
    else{

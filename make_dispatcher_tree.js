@@ -258,5 +258,18 @@ function make_chatbot_tree(path='./faq.json'){
 
     }
 
+function include_tree(path="./scripts/dispatcher.json"){
+  data = fs.readFileSync(path);
+
+  json = JSON.parse(data);
+
+  json['0_0_1_1_0']={}
+  json['0_0_1_1_0']['text']={}
+  json['0_0_1_1_0']['text']['output']= "J'ai bien pris en compte votre problème lié à une carte SIM. Pouvez-vous m'expliquer simplement en une phrase votre problème ?"
+
+  fs.writeFileSync("./scripts/dispatcher.json", JSON.stringify(json,null,4));
+}
+
 
 make_chatbot_tree();
+include_tree();

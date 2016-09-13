@@ -47,23 +47,31 @@ function receivedMessage(event, context, num_message, reset) {
                 break;
         }
 
-
         // if(num_message==0){
-        //   introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
-        //   introduction2 = "Je suis Reddie, votre assistant virtuel :)";
-        //   //introduction3 = "Tout d'abord veuillez vous connecter à votre compte Red SFR :)";
+        //   context.arbre = {};
+        //   context.arbre['nom']="cartes_sim";
+        //   context.arbre['context']='0';
+        //   pythonCtrl.talkToPython(messageText, context, num_message, senderId, sendCallback, reset);
         //
-        //   sendTextMessage(senderId, introduction);
-        //   sendTextMessage(senderId, introduction2);
-        //   //sendTextMessage(senderId, introduction3);
-        //   sendAccountLinking(senderId);
-        //
-        //   var output =introduction;
-        //   context.reponses[num_message] = introduction;
         // }
 
+
+        if(num_message==0){
+          introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
+          introduction2 = "Je suis Reddie, votre assistant virtuel :)";
+          //introduction3 = "Tout d'abord veuillez vous connecter à votre compte Red SFR :)";
+
+          sendTextMessage(senderId, introduction);
+          sendTextMessage(senderId, introduction2);
+          //sendTextMessage(senderId, introduction3);
+          sendAccountLinking(senderId);
+
+          var output =introduction;
+          context.reponses[num_message] = introduction;
+        }
+
         // Remettre num_message==0 quand on utilisera le log
-        if(num_message==0 || context.reponses[num_message-1]=="Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question."){
+        else if(num_message==0 || context.reponses[num_message-1]=="Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question."){
 
           var output = {};
           introduction = "Je vais vous poser plusieurs questions pour résoudre votre problème plus rapidement B-) Mais rassurez-vous, mes collègues humains prendront le relai si besoin :) ";
@@ -74,7 +82,7 @@ function receivedMessage(event, context, num_message, reset) {
                "buttons": [
                  {"type":"postback",
                  "title":"Cliquez ici",
-                 "payload":"0_0"}]
+                 "payload":"0_0_1_1_0"}]
               },
               {"title":"Fibre, Box",
               "image_url":"http://www.s-sfr.fr/media/gred-box-maxi1.png",

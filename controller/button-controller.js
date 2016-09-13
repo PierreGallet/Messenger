@@ -23,6 +23,7 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
     var output;
     var output2;
 
+
     if (payload == "payloadOuiGiveInfos") {
       output = "Nous avons bien enregistré vos informations. Un conseiller va prendre le relai. Pour vous faire patienter, je vous propose le nouveau clip Red";
       sendCallback("text", output, senderId);
@@ -145,6 +146,12 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
     }
     else {
         context.reponses[num_message] = output;
+    }
+
+    if (payload=='0_0_1_1_0'){
+      context.arbre = {};
+      context.arbre['nom']="cartes_sim"
+      context.arbre['context']='0'
     }
 
     console.log('\n Contexte après réception message %s: \n',num_message,context);
