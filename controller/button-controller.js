@@ -7,17 +7,17 @@ var request = require('request');
 var nodeCtrl = require('./node-controller.js');
 
 
-function payloadAnalyser(event,sendCallback, context, num_message) {
+function payloadAnalyser(event,sendCallback, context, num_message, reset) {
 
     var senderId = event.sender.id;
     var recipientId = event.recipient.id;
     var timeOfMessage = event.timestamp;
 
-    try{
-      var payload = event.message.quick_reply.payload;
+    try {
+        var payload = event.message.quick_reply.payload;
     }
     catch(e){
-      var payload = event.postback.payload;
+        var payload = event.postback.payload;
     }
 
     var output;
@@ -25,9 +25,28 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
 
 
     if (payload == "payloadOuiGiveInfos") {
-      output = "Nous avons bien enregistré vos informations. Un conseiller va prendre le relai. Pour vous faire patienter, je vous propose le nouveau clip Red";
+      output = "Nous avons bien enregistré vos informations. Un conseiller va prendre le relais. Pour vous faire patienter, je vous propose le nouveau clip Red";
       sendCallback("text", output, senderId);
       sendCallback('video', '/assets/clip.mp4', senderId)
+      output = {};
+      output.text = "De 1 à 5, à combien évalueriez vous ce service?";
+      output.proposals = [
+          {"content_type":"text",
+          "title":"1",
+          "payload":"evaluation"},
+          {"content_type":"text",
+          "title":"2",
+          "payload":"evaluation"},
+          {"content_type":"text",
+          "title":"3",
+          "payload":"evaluation"},
+          {"content_type":"text",
+          "title":"4",
+          "payload":"evaluation"},
+          {"content_type":"text",
+          "title":"5",
+          "payload":"evaluation"}];
+      sendCallback("quick_reply", output, senderId)
 
     }
     else if (payload == "payloadNonGiveInfos") {
@@ -45,15 +64,42 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
     else if (payload == "finish") {
         output = "Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question.";
         sendCallback("text", output, senderId);
-        sendCallback("unlinking",{},senderId);
+        output = {};
+        output.text = "De 1 à 5, à combien évalueriez vous ce service?";
+        output.proposals = [
+            {"content_type":"text",
+            "title":"1",
+            "payload":"evaluation"},
+            {"content_type":"text",
+            "title":"2",
+            "payload":"evaluation"},
+            {"content_type":"text",
+            "title":"3",
+            "payload":"evaluation"},
+            {"content_type":"text",
+            "title":"4",
+            "payload":"evaluation"},
+            {"content_type":"text",
+            "title":"5",
+            "payload":"evaluation"}];
+        sendCallback("quick_reply", output, senderId)
+    }
+    else if (payload == "evaluation") {
+        var output = "Merci pour votre retour, nous nous améliorons chaque jour grâce à vos feedback. A bientôt sur messenger!"
+        sendCallback("text", output, senderId);
+        var output = "Vous pouvez maintenant vous déconnecter de votre compte SFR :)"
+        sendCallback("unlinking", output ,senderId);
+        reset()
+        console.log('le contexte est remis à zero, context/num_message:', context, num_message);
+
     }
 
     else if (payload == "passer_conseiller") {
-        output = "Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relai ;) Pouvez-vous lui détailler un peu plus votre problème :) ?";
+        output = "Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relais ;) Pouvez-vous lui détailler un peu plus votre problème :) ?";
         sendCallback("text", output, senderId);
     }
 
-    else if (payload =='stop'){
+    else if (payload == 'stop'){
       output = {};
       output.text = "Avez vous trouvé ce que vous cherchiez?";
       output.proposals = [
@@ -66,18 +112,9 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
       sendCallback("quick_reply", output, senderId)
     }
 
-    else if (payload == "new_forfait") {
-        output = "Parfait, afin de vérifier votre identité, pouvez vous nous transmettre votre numero de téléphone et votre email?";
-        sendCallback('text',output,senderId);
-    }
-    else if (payload == "help_payload") {
-        output = "Je suis Rouge, le chatbot de SFR Red. Vous pouvez me poser vos questions, je peux vous proposer des solutions immédiates ou vous rediriger vers un humain plus intelligent que moi!";
-        sendCallback('text',output,senderId);
-    }
-
     else if (payload == "nouvelle_question") {
         output ={};
-        output.text = "Vous nous contacter en ce qui concerne?";
+        output.text = "Une nouvelle question? Cette fois ci vous nous contactez pour :) ?";
         output.proposals = [
            {"content_type":"text",
            "title":"Forfait Mobile",
@@ -92,24 +129,17 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
         sendCallback('quick_reply',output,senderId);
     }
 
-    else if(payload == "0" && num_message == 0 ){
-      introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
-      introduction2 = "Je suis Reddie, votre assistant virtuel :)";
-      //introduction3 = "Tout d'abord veuillez vous connecter à votre compte Red SFR :)";
-
-      sendCallback('text',introduction,senderId);
-      sendCallback('text',introduction2,senderId);
-      sendCallback('linking',{},senderId);
-
-      var output =introduction;
-
+    else if(payload == "gettingStarted" ){
+        introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
+        introduction2 = "Je suis Reddie, votre assistant virtuel :)";
+        output = "Tout d'abord veuillez vous connecter à votre compte Red SFR :)"
+        sendCallback("text", introduction, senderId);
+        sendCallback("text", introduction2, senderId);
+        sendCallback("linking", output, senderId);
     }
 
     else if (payload == "0") {
        output = {};
-       //introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
-       //introduction2 = "Je suis Rouge, le bot de SFR Red.";
-       //introduction3 = "Je vais vous poser plusieurs questions pour mieux cerner ce qui vous amène ici.";
        output.text = "Tout d'abord, vous êtes client?";
        output.proposals = [
           {"content_type":"text",
@@ -123,36 +153,65 @@ function payloadAnalyser(event,sendCallback, context, num_message) {
           "payload":"0_2"}
        ];
        sendCallback('quick_reply',output,senderId);
+    }
+    else if (payload == "no_account_linking"){
+        var output = {};
+        introduction = "Je vais vous poser plusieurs questions pour résoudre votre problème plus rapidement B-) Mais rassurez-vous, mes collègues humains prendront le relais si besoin :) ";
+        output.text = "Tout d'abord, vous êtes client...";
+        output.proposals = [
+            {"title":"Forfait Mobile",
+             "image_url":"http://www.s-sfr.fr/media/gred-telmobile-maxi.png",
+             "buttons": [
+               {"type":"postback",
+               "title":"Cliquez ici",
+               "payload":"0_0"}]
+            },
+            {"title":"Fibre, Box",
+            "image_url":"http://www.s-sfr.fr/media/gred-box-maxi1.png",
+             "buttons": [
+               {"type":"postback",
+               "title":"Cliquez ici",
+               "payload":"0_1"}]
+            },
+            {"title":"Pas encore client",
+            "image_url":"http://www.s-sfr.fr/media/gred-caddie-maxi.png",
+             "buttons": [
+               {"type":"postback",
+               "title":"Cliquez ici",
+               "payload":"0_2"}]
+            }
+        ];
 
-      //  sendCallback('text',introduction,senderId);
-      //  setTimeout(function(){
-      //      sendCallback('text',introduction2,senderId);
-      //      setTimeout(function(){
-      //          sendCallback('text',introduction3,senderId);
-      //          setTimeout(function(){
-      //               sendCallback('quick_reply',output,senderId);
-      //          }, 1500);
-      //      }, 1500);
-      //  }, 1500);
+        sendCallback("text", introduction, senderId);
+          setTimeout(function(){
+            sendCallback("text", output.text, senderId);
+            setTimeout(function(){
+              sendCallback("generic", output, senderId);
+            }, 1500);
+        },1500);
     }
 
     else {
         output = nodeCtrl.load_node(payload, senderId, sendCallback);
     }
 
+
     // on enregistre les reponses
-    if (output.text){
-        context.reponses[num_message] = output.text;
-    }
-    else {
-        context.reponses[num_message] = output;
+    if (output){
+        if (output.text){
+            context.reponses[num_message] = output.text;
+        }
+        else {
+            context.reponses[num_message] = output;
+        }
     }
 
-    if (payload=='0_0_1_1_0'){
-      context.arbre = {};
-      context.arbre['nom']="cartes_sim"
-      context.arbre['context']='0'
-    }
+
+    // if (payload=='0_0_1_1_0'){
+    //   context.arbre = {};
+    //   context.arbre['nom']="cartes_sim"
+    //   context.arbre['context']='0'
+    // }
 
     console.log('\n Contexte après réception message %s: \n',num_message,context);
 }

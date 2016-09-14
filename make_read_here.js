@@ -11,6 +11,7 @@ function addslashes(ch) {
     return ch;
 }
 
+
 function button_read_here_begin(title, output, payload, json_results){
 
     json_results[payload]={};
@@ -34,20 +35,28 @@ function button_read_here_begin(title, output, payload, json_results){
             json_results[payload].generic.output.proposals[i].buttons = [];
             json_results[payload].generic.output.proposals[i].buttons[0] = {};
             json_results[payload].generic.output.proposals[i].buttons[0].type = "web_url";
-            json_results[payload].generic.output.proposals[i].buttons[0].title = "Cliquez ici";
+            json_results[payload].generic.output.proposals[i].buttons[0].title = "Lire sur le web";
             json_results[payload].generic.output.proposals[i].buttons[0].url = output.link[i];
         }
     }
     var b = {};
     b.type = "postback";
-    b.title = "STOP";
+    b.title = "Arrêter";
     b.payload = "stop";
     json_results[payload].button.output.proposals.push(b);
     if(output.img){
+      data = fs.readFileSync('./img2newimg.json');
+      data = JSON.parse(data);
+
       json_results[payload].image={};
       json_results[payload].image.output=[];
       output.img.forEach(function(img){
-        json_results[payload].image.output.push(img);
+          if (img in data){
+              json_results[payload].image.output.push(data[img]);
+          }
+          else{
+              console.log("error for image:", img);
+          }
       });
     }
     return json_results;
@@ -107,20 +116,28 @@ function button_read_here(output, payload,json_results){
           json_results[payload].generic.output.proposals[i].buttons = [];
           json_results[payload].generic.output.proposals[i].buttons[0] = {};
           json_results[payload].generic.output.proposals[i].buttons[0].type = "web_url";
-          json_results[payload].generic.output.proposals[i].buttons[0].title = "Cliquez ici";
+          json_results[payload].generic.output.proposals[i].buttons[0].title = "Lire sur le web";
           json_results[payload].generic.output.proposals[i].buttons[0].url = output.link[i];
       }
   }
   var b = {};
   b.type = "postback";
-  b.title = "STOP";
+  b.title = "Arrêter";
   b.payload = "stop";
   json_results[payload].button.output.proposals.push(b);
   if(output.img){
+    data = fs.readFileSync('./img2newimg.json');
+    data = JSON.parse(data);
+
     json_results[payload].image={};
     json_results[payload].image.output=[];
     output.img.forEach(function(img){
-      json_results[payload].image.output.push(img);
+        if (img in data){
+            json_results[payload].image.output.push(data[img]);
+        }
+        else{
+            console.log("error for image:", img);
+        }
     });
   }
   return json_results;
@@ -175,20 +192,28 @@ function button_read_here_end(output, payload,json_results){
             json_results[payload].generic.output.proposals[i].buttons = [];
             json_results[payload].generic.output.proposals[i].buttons[0] = {};
             json_results[payload].generic.output.proposals[i].buttons[0].type = "web_url";
-            json_results[payload].generic.output.proposals[i].buttons[0].title = "Cliquez ici";
+            json_results[payload].generic.output.proposals[i].buttons[0].title = "Lire sur le web";
             json_results[payload].generic.output.proposals[i].buttons[0].url = output.link[i];
         }
     }
     var b = {};
     b.type = "postback";
-    b.title = "STOP";
+    b.title = "Arrêter";
     b.payload = "stop";
     json_results[payload].button.output.proposals.push(b);
     if(output.img){
+      data = fs.readFileSync('./img2newimg.json');
+      data = JSON.parse(data);
+
       json_results[payload].image={};
       json_results[payload].image.output=[];
       output.img.forEach(function(img){
-        json_results[payload].image.output.push(img);
+          if (img in data){
+              json_results[payload].image.output.push(data[img]);
+          }
+          else{
+              console.log("error for image:", img);
+          }
       });
     }
     return json_results;

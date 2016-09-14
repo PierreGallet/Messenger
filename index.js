@@ -48,7 +48,7 @@ var reset = function(senderId) {
     num_message[senderId] = -1;
 };
 
-//app.use(express.static(__dirname + '/public'));
+// app.use(express.static(__dirname + '/public'));
 
 app.use(express.static(__dirname + '/views'));
 app.use(express.static('public'));
@@ -137,7 +137,7 @@ app.post('/webhook', function (req, res) {
 
               console.log('__________________________________________ message n°:', num_message[messagingEvent.sender.id], ' _____________________________________________');
 
-              console.log('messagingEvent :',messagingEvent)
+              console.log('messagingEvent :', messagingEvent)
 
               try{
                 context[senderId].questions[num_message[senderId]]= message.text
@@ -160,7 +160,7 @@ app.post('/webhook', function (req, res) {
             }
             else if(messagingEvent.account_linking){
               console.log('Linking account :',messagingEvent);
-              mainCtrl.receivedAccountLink(messagingEvent);
+              mainCtrl.receivedMessage(messagingEvent);
             }
             else if(messagingEvent.optin){
               console.log('Optin :',messagingEvent);
@@ -190,7 +190,7 @@ function get_user_profile(context, num_message, messagingEvent, receivedCallback
             // context[messagingEvent.sender.id].cover = JSON.parse(body).cover;
             // context[messagingEvent.sender.id].education = JSON.parse(body).education;
             // context[messagingEvent.sender.id].hometown = JSON.parse(body).hometown;
-            //console.log('-------------- DATA ---------------\n\n\n',JSON.parse(body));
+            // console.log('-------------- DATA ---------------\n\n\n',JSON.parse(body));
             receivedCallback(messagingEvent);
             }
             else {
@@ -219,7 +219,7 @@ function gettingStarted() {
          "thread_state":"new_thread",
          "call_to_actions":[
              {
-                 "payload":"0"
+                 "payload":"gettingStarted"
              }
          ]
      }

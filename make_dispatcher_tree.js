@@ -126,9 +126,9 @@ function make_generic_node_faq(title_list, subtitle_list, item_url_list, image_u
 
         for (var i = 0; i < title_list.length; i++){
           tab[i] = {};
-          tab[i].title = title_list[i];
-          tab[i].subtitle = subtitle_list[i];
-          tab[i].item_url = item_url_list[i];
+          tab[i].title = subtitle_list[i];
+        //   tab[i].subtitle = subtitle_list[i];
+        //   tab[i].item_url = item_url_list[i];
           tab[i].image_url = config.SERVER_URL + image_url_list[i];
           if(item_url_list[i] !== ''){
             tab[i].buttons=[];
@@ -167,10 +167,7 @@ function generate_node(json_data, json_results, payload, deep){
   }
 
   else if(deep>1 && Object.keys(json_data).indexOf("img_link") < 0){
-    [json_results, payload, deep] = make_generic_node_dispatcheur(Object.keys(json_data),
-                      [],
-                      [],
-                      [],
+    [json_results, payload, deep] = make_quickreply_node(Object.keys(json_data),
                       list_test[deep],
                       payload,
                       json_results,
@@ -258,18 +255,18 @@ function make_chatbot_tree(path='./faq.json'){
 
     }
 
-function include_tree(path="./scripts/dispatcher.json"){
-  data = fs.readFileSync(path);
-
-  json = JSON.parse(data);
-
-  json['0_0_1_1_0']={}
-  json['0_0_1_1_0']['text']={}
-  json['0_0_1_1_0']['text']['output']= "J'ai bien pris en compte votre problème lié à une carte SIM. Pouvez-vous m'expliquer simplement en une phrase votre problème ?"
-
-  fs.writeFileSync("./scripts/dispatcher.json", JSON.stringify(json,null,4));
-}
+// function include_tree(path="./scripts/dispatcher.json"){
+//   data = fs.readFileSync(path);
+//
+//   json = JSON.parse(data);
+//
+//   json['0_0_1_1_0']={}
+//   json['0_0_1_1_0']['text']={}
+//   json['0_0_1_1_0']['text']['output']= "J'ai bien pris en compte votre problème lié à une carte SIM. Pouvez-vous m'expliquer simplement en une phrase votre problème ?"
+//
+//   fs.writeFileSync("./scripts/dispatcher.json", JSON.stringify(json,null,4));
+// }
 
 
 make_chatbot_tree();
-include_tree();
+// include_tree();

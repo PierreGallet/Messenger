@@ -65,6 +65,7 @@ function load_node(payload,senderId,sendCallback){
     node = json[payload];
   }
 
+
   console.log("le json[payload] : ",node)
   console.log(node['text'])
 
@@ -84,7 +85,6 @@ function load_node(payload,senderId,sendCallback){
 
     else if(Object.keys(node).indexOf("faq") >= 0){
       console.log("On est dans la partie Faq", node);
-      console.log()
       sendCallback("text", node['text']['output'], senderId);
       sendCallback("generic", node['generic']['output'], senderId);
       doyoufind(sendCallback, senderId);
@@ -107,7 +107,7 @@ function load_node(payload,senderId,sendCallback){
       sendCallback("button", node['button']['output'], senderId);
       if(Object.keys(node).indexOf("image") >= 0){
         for (var i =0;i<node['image']['output'].length;i++){
-          sendCallback("image", node['image']['output'][i]);
+            sendCallback("image", node['image']['output'][i], senderId);
         }
       }
       if(Object.keys(node).indexOf("generic") >= 0){
@@ -131,7 +131,7 @@ function load_node(payload,senderId,sendCallback){
    }
 
    else{
-      console.log("Schéma de noeud non reconnu");
+      console.log(";) DEV ERR : Schéma de noeud non reconnu ou payload non défini");
    }
 }
 

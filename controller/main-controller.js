@@ -31,8 +31,67 @@ function receivedMessage(event, context, num_message, reset) {
       var payload = event.postback.payload;
     }
 
+
+    // trois cas : soit payload (ci dessous), soit mot clef (le else if avec switch), soit python (le else)
     if((event.message && event.message.quick_reply)||(event.postback)){
-      buttonCtrl.payloadAnalyser(event,sendCallback,context,num_message);
+        buttonCtrl.payloadAnalyser(event,sendCallback, context, num_message, reset);
+    }
+
+    else if (event.account_linking){
+        var status = event.account_linking.status;
+        var authCode = event.account_linking.authorization_code;
+
+        console.log("Received account link event with for user %d with status %s and auth code %s ", senderId, status, authCode);
+
+        if (status == 'linked'){
+            sendTextMessage(senderId, "Vous vous êtes correctement connecté :)");
+
+            var output = {};
+            introduction = "Je vais vous poser plusieurs questions pour résoudre votre problème plus rapidement B-) Mais rassurez-vous, mes collègues humains prendront le relais si besoin :) ";
+            output.text = "Tout d'abord, vous êtes client...";
+            output.proposals = [
+                {"title":"Forfait Mobile",
+                 "image_url":"http://www.s-sfr.fr/media/gred-telmobile-maxi.png",
+                 "buttons": [
+                   {"type":"postback",
+                   "title":"Cliquez ici",
+                   "payload":"0_0"}]
+                },
+                {"title":"Fibre, Box",
+                "image_url":"http://www.s-sfr.fr/media/gred-box-maxi1.png",
+                 "buttons": [
+                   {"type":"postback",
+                   "title":"Cliquez ici",
+                   "payload":"0_1"}]
+                },
+                {"title":"Pas encore client",
+                "image_url":"http://www.s-sfr.fr/media/gred-caddie-maxi.png",
+                 "buttons": [
+                   {"type":"postback",
+                   "title":"Cliquez ici",
+                   "payload":"0_2"}]
+                }
+            ];
+
+            sendTextMessage(senderId, introduction);
+              setTimeout(function(){
+                sendCallback("text", output.text, senderId);
+                setTimeout(function(){
+                  sendCallback("generic", output, senderId);
+                }, 1500);
+            },1500);
+            if (output.text){
+              context.reponses[num_message] = "linking account, bonjour + " + output.text;
+            }
+            else {
+              context.reponses[num_message] = "linking account, bonjour + " + output;
+            }
+            console.log('\n Contexte après réception message %s: \n',num_message,context);
+        }
+
+        else{
+            sendTextMessage(senderId, "Vous vous êtes correctement déconnecté :)");
+        }
     }
 
     else {
@@ -40,94 +99,68 @@ function receivedMessage(event, context, num_message, reset) {
 
         // If we receive a text message, check to see if it matches any special
         // keywords and send back the corresponding example. Otherwise, call the python script
-        switch (messageText) {
-            case 'aide':
-            case 'help':
-                sendHelpMessage(senderId);
-                break;
+
+        // initialization
+        if(num_message == 0 || context.reponses[num_message-1]=="Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question."){
+            introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
+            introduction2 = "Je suis Reddie, votre assistant virtuel :)";
+            output = "Tout d'abord veuillez vous connecter à votre compte Red SFR :)";
+            sendTextMessage(senderId, introduction);
+            setTimeout(function(){
+                 sendTextMessage(senderId, introduction2);
+                 setTimeout(function(){
+                     sendAccountLinking(senderId, output);
+                 }, 1000);
+            }, 1000);
         }
-
-        // if(num_message==0){
-        //   context.arbre = {};
-        //   context.arbre['nom']="cartes_sim";
-        //   context.arbre['context']='0';
-        //   pythonCtrl.talkToPython(messageText, context, num_message, senderId, sendCallback, reset);
-        //
-        // }
-
-
-        if(num_message==0){
-          introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
-          introduction2 = "Je suis Reddie, votre assistant virtuel :)";
-          //introduction3 = "Tout d'abord veuillez vous connecter à votre compte Red SFR :)";
-
-          sendTextMessage(senderId, introduction);
-          sendTextMessage(senderId, introduction2);
-          //sendTextMessage(senderId, introduction3);
-          sendAccountLinking(senderId);
-
-          var output =introduction;
-          context.reponses[num_message] = introduction;
-        }
-
-        // Remettre num_message==0 quand on utilisera le log
-        else if(num_message==0 || context.reponses[num_message-1]=="Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question."){
-
-          var output = {};
-          introduction = "Je vais vous poser plusieurs questions pour résoudre votre problème plus rapidement B-) Mais rassurez-vous, mes collègues humains prendront le relai si besoin :) ";
-          output.text = "Tout d'abord, vous êtes client...";
-          output.proposals = [
-              {"title":"Forfait Mobile",
-               "image_url":"http://www.s-sfr.fr/media/gred-telmobile-maxi.png",
-               "buttons": [
-                 {"type":"postback",
-                 "title":"Cliquez ici",
-                 "payload":"0_0_1_1_0"}]
-              },
-              {"title":"Fibre, Box",
-              "image_url":"http://www.s-sfr.fr/media/gred-box-maxi1.png",
-               "buttons": [
-                 {"type":"postback",
-                 "title":"Cliquez ici",
-                 "payload":"0_1"}]
-              },
-              {"title":"Pas encore client",
-              "image_url":"http://www.s-sfr.fr/media/gred-caddie-maxi.png",
-               "buttons": [
-                 {"type":"postback",
-                 "title":"Cliquez ici",
-                 "payload":"0_2"}]
-              }
-          ];
-
-        sendTextMessage(senderId, introduction);
-        setTimeout(function(){
-          sendCallback("text", output.text, senderId);
-          setTimeout(function(){
-            sendCallback("generic", output, senderId);
-          }, 1500);
-        },1500);
-
-
-
-          if (output.text){
-              context.reponses[num_message] = output.text;
-          }
-          else {
-              context.reponses[num_message] = output;
-          };
-          console.log('\n Contexte après réception message %s: \n',num_message,context);
-        }
-
         else{
-          pythonCtrl.talkToPython(messageText, context, num_message, senderId, sendCallback, reset);
-        }
+            switch (messageText) {
+                case 'aide':
+                case 'help':
+                    var output = "vous pouvez me posez des questions pièges, n'hésitez pas."
+                    sendHelpMessage(senderId, output);
+                    if (output.text){
+                        context.reponses[num_message] = output.text;
+                    }
+                    else {
+                        context.reponses[num_message] = output;
+                    }
+                    console.log('\n Contexte après réception message %s: \n',num_message,context);
+                    break;
+                case 'merci':
+                    var output = "Mais de rien";
+                    sendTextMessage(senderId, output)
 
-        if (messageAttachments) {
-            sendTextMessage(senderId, "Message with attachment received");
+
+                default:
+                    pythonCtrl.talkToPython(messageText, context, num_message, senderId, sendCallback, reset);
+            }
         }
     }
+
+
+    if (messageAttachments) {
+        sendTextMessage(senderId, "Message with attachment received");
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -153,22 +186,22 @@ var sendCallback = function(type, output, senderId) {
         sendImageMessage(senderId, output);
     }
     else if (type == 'linking') {
-        sendAccountLinking(senderId);
+        sendAccountLinking(senderId, output);
     }
     else if (type == 'unlinking'){
-      sendAccountUnlinking(senderId);
+        sendAccountUnlinking(senderId, output);
     }
 };
 
 
 // the functions below are parsing the messageText / proposals / recipientId in the right format for the send API.
-function sendHelpMessage(senderId) {
+function sendHelpMessage(senderId, messageText) {
     var messageData = {
         recipient: {
         id: senderId
         },
         message: {
-        text: "vous pouvez me posez des questions pièges, n'hésitez pas."
+        text: messageText
         }
     };
     callSendAPI(messageData);
@@ -237,6 +270,7 @@ function sendGenericMessage(senderId, proposals) {
 }
 
 function sendVideoMessage(senderId, videoUrl) {
+  console.log('sending video')
   var messageData = {
     recipient: {
       id: senderId
@@ -255,6 +289,7 @@ function sendVideoMessage(senderId, videoUrl) {
 }
 
 function sendImageMessage(senderId, imageUrl) {
+  console.log('sending image')
   var messageData = {
     recipient: {
       id: senderId
@@ -298,7 +333,7 @@ function sendTypingOff(senderId) {
   callSendAPI(messageData);
 }
 
-function sendAccountLinking(senderId) {
+function sendAccountLinking(senderId, messageText) {
   console.log("Inside sendAccountLinking");
 
   var messageData = {
@@ -310,10 +345,15 @@ function sendAccountLinking(senderId) {
         type: "template",
         payload: {
           template_type: "button",
-          text: "Tout d'abord veuillez vous connecter à votre compte Red SFR :)",
+          text: messageText,
           buttons:[{
             type: "account_link",
-            url: config.SERVER_URL + "/authorize",
+            url: config.SERVER_URL + "/authorize"
+          },
+          {
+            type:"postback",
+            title:"Ne pas se connecter",
+            payload:"no_account_linking"
           }]
         }
       }
@@ -323,7 +363,7 @@ function sendAccountLinking(senderId) {
   callSendAPI(messageData);
 }
 
-function sendAccountUnlinking(senderId){
+function sendAccountUnlinking(senderId, messageText){
   console.log("Inside sendAccountUnlinking ");
 
   var messageData = {
@@ -335,10 +375,11 @@ function sendAccountUnlinking(senderId){
         type: "template",
         payload: {
           template_type: "button",
-          text: "Vous pouvez maintenant vous déconnecter de votre compte SFR :)",
+          text: messageText,
           buttons:[{
             type: "account_unlink",
-          }]
+            url: config.SERVER_URL + "/authorize"
+        }]
         }
       }
     }
@@ -346,26 +387,7 @@ function sendAccountUnlinking(senderId){
   callSendAPI(messageData);
 };
 
-function receivedAccountLink(event) {
-  console.log("receivedAccountLink");
-  var senderId = event.sender.id;
-  var recipientId = event.recipient.id;
 
-  var status = event.account_linking.status;
-  var authCode = event.account_linking.authorization_code;
-
-  console.log("Received account link event with for user %d with status %s " +
-    "and auth code %s ", senderId, status, authCode);
-  if (status == 'linked'){
-    sendTextMessage(senderId, "Vous vous êtes correctement connecté :)");
-
-  }
-  else{
-    sendTextMessage(senderId, "Vous vous êtes correctement déconnecté :)");
-
-  }
-
-}
 
 // callSendAPI calls the Send API and effectively send the message through messenger.
 function callSendAPI(messageData) {
@@ -402,4 +424,3 @@ exports.sendQuickReply = sendQuickReply;
 exports.receivedMessage = receivedMessage;
 //exports.receivedPostback = receivedPostback;
 exports.sendCallback = sendCallback;
-exports.receivedAccountLink = receivedAccountLink;

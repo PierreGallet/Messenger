@@ -32,6 +32,65 @@ function past_context(context, intent){
 }
 
 
+function talkToPython(inputStr, context, num_message, senderId, callback, reset) {
+
+    console.log('talkToPython is launched');
+
+    // if (context.arbre && context.arbre['nom']==="cartes_sim"){
+    //   path = './tmp/cartes_sim'
+    //   deep = "False"
+    //   model_name = context.arbre['context'] + '/' + 'svm_linear?p=0.5'
+    //   threshold = 0.01
+    //   console.log(model_name)
+    //
+    //   console.log(context.arbre['context'])
+    //   console.log(context.arbre['context']==='0')
+    //
+    //   if (context.arbre['context']==='0'){
+    //     tache ='classification'
+    //   }
+    //   else if (context.arbre['context'].length){
+    //     tache ='NER'
+    //   }
+    //
+    // }
+    //
+    var options = {
+        mode: 'text',
+        pythonPath:  config.pythonPath,
+        pythonOptions: ['-u'],
+        scriptPath: config.pythonScriptsPath,
+        args: [inputStr, path, deep, model_name, threshold, tache]
+    };
+
+    // var options = {
+    //     mode: 'text',
+    //     pythonPath:  config.pythonPath,
+    //     pythonOptions: ['-u'],
+    //     scriptPath: config.pythonScriptsPath,
+    //     args: [inputStr]
+    //   }
+
+
+
+    pshell.run('predict.py', options, function (err, results) {
+        if (err){
+          console.log('Erreur script Python',err)
+        };
+        // results is an array consisting of messages collected during execution
+        console.log('results du script python: %j', results);
+
+        var str = "";
+        results.forEach(function(element){str = str + element;});
+        console.log('on affiche le string',str);
+
+        parsingJSON(JSON.parse(str), context, num_message, senderId, callback, reset);
+
+    });
+
+}
+
+
 function parsingJSON(json, context, num_message, senderId, sendCallback, reset) {
 
     //context[num_message] = json;
@@ -228,63 +287,6 @@ function parsingJSON(json, context, num_message, senderId, sendCallback, reset) 
 
 }
 
-function talkToPython(inputStr, context, num_message, senderId, callback, reset) {
-
-    console.log('talkToPython is launched');
-
-    if (context.arbre && context.arbre['nom']==="cartes_sim"){
-      path = './tmp/cartes_sim'
-      deep = "False"
-      model_name = context.arbre['context'] + '/' + 'svm_linear?p=0.5'
-      threshold = 0.01
-      console.log(model_name)
-
-      console.log(context.arbre['context'])
-      console.log(context.arbre['context']==='0')
-
-      if (context.arbre['context']==='0'){
-        tache ='classification'
-      }
-      else if (context.arbre['context'].length){
-        tache ='NER'
-      }
-
-    }
-
-    var options = {
-        mode: 'text',
-        pythonPath:  config.pythonPath,
-        pythonOptions: ['-u'],
-        scriptPath: config.pythonScriptsPath,
-        args: [inputStr,path, deep, model_name, threshold,tache]
-    };
-
-    var options = {
-        mode: 'text',
-        pythonPath:  config.pythonPath,
-        pythonOptions: ['-u'],
-        scriptPath: config.pythonScriptsPath,
-        args: [inputStr]
-      }
-
-
-
-    pshell.run('predict.py', options, function (err, results) {
-        if (err){
-          console.log('Erreur script Python',err)
-        };
-        // results is an array consisting of messages collected during execution
-        console.log('results du script python: %j', results);
-
-        var str = "";
-        results.forEach(function(element){str = str + element;});
-        console.log('on affiche le string',str);
-
-        parsingJSON(JSON.parse(str), context, num_message, senderId, callback, reset);
-
-    });
-
-}
 
 function isSetPhone() {
     /*
