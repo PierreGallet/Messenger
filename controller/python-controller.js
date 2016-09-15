@@ -55,12 +55,27 @@ function talkToPython(inputStr, context, num_message, senderId, callback, reset)
     //
     // }
     //
+    console.log(context.reponses[num_message-1]==="Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relais ;) Pouvez-vous lui détailler un peu plus votre problème :) ?");
+    if (context.reponses[num_message-1]==="Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relais ;) Pouvez-vous lui détailler un peu plus votre problème :) ?"){
+        path1='./tmp/intent'
+        deep1= "False"
+        model_name1='reglog_l1?p=1.0'
+        threshold1=0.01
+        tache1='classification'
+        path2='./tmp/sentiment'
+        deep2 = "True"
+        model_name2='cnn_lstm'
+        threshold2=0.01
+        tache2='classification'
+        predictions =[[path1,deep1,model_name1,threshold1,tache1],[path2,deep2,model_name2,threshold2,tache2]]
+
+    }
     var options = {
         mode: 'text',
         pythonPath:  config.pythonPath,
         pythonOptions: ['-u'],
         scriptPath: config.pythonScriptsPath,
-        args: [inputStr, path, deep, model_name, threshold, tache]
+        args: [inputStr,path1,deep1,model_name1,threshold1,tache1,path2,deep2,model_name2,threshold2,tache2]
     };
 
     // var options = {
@@ -84,19 +99,18 @@ function talkToPython(inputStr, context, num_message, senderId, callback, reset)
         results.forEach(function(element){str = str + element;});
         console.log('on affiche le string',str);
 
-        parsingJSON(JSON.parse(str), context, num_message, senderId, callback, reset);
+        parsingJSON(JSON.parse(str), context, num_message, senderId, callback, reset,predictions);
 
     });
 
 }
 
 
-function parsingJSON(json, context, num_message, senderId, sendCallback, reset) {
+function parsingJSON(json, context, num_message, senderId, sendCallback, reset,predictions) {
 
     //context[num_message] = json;
     console.log(json)
     console.log(context)
-    console.log(context.arbre['nom']==="cartes_sim" && context.arbre['context']==="0")
 
     // for the condition below to work with num_message even if we did not understood one stuff [num_message will return as it was at the end]
     num_message_copy = num_message;
@@ -111,7 +125,20 @@ function parsingJSON(json, context, num_message, senderId, sendCallback, reset) 
         }
     }
 
-    if(context.reponses[num_message-1]=="Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relai ;) Pouvez-vous lui détailler un peu plus votre problème :) ?"){
+    if (context.reponses[num_message-1]==="Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relais ;) Pouvez-vous lui détailler un peu plus votre problème :) ?"){
+        path1 = predictions[0][0]
+        path2 = predictions[1][0]
+        context.problem = json[path1].message;
+        context.classification = json[path1].intent[0];
+        context.classification_accuracy = json[path1].accuracy[0];
+        context.sentiment = json[path2].intent[0];
+        context.sentiment_accuracy = json[path2].accuracy[0];
+        output = "Nous avons bien pris en compte votre problème. Avant de passer la main à un conseiller, nous aurions besoin de votre email et numéro de téléphone";
+        sendCallback("text", output, senderId);
+
+    }
+
+    else if(context.reponses[num_message-1]=="Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relai ;) Pouvez-vous lui détailler un peu plus votre problème :) ?"){
 
       context.probleme = json.message;
       context.classification_agent = json.intent[0];

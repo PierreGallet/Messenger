@@ -27,16 +27,6 @@ function receivedMessage(event, context, num_message, reset) {
       var messageText = message.text;
       var messageAttachments = message.attachments;
     }
-    else{
-      var payload = event.postback.payload;
-    }
-
-
-    // trois cas : soit payload (ci dessous), soit mot clef (le else if avec switch), soit python (le else)
-    if((event.message && event.message.quick_reply)||(event.postback)){
-        buttonCtrl.payloadAnalyser(event,sendCallback, context, num_message, reset);
-    }
-
     else if (event.account_linking){
         var status = event.account_linking.status;
         var authCode = event.account_linking.authorization_code;
@@ -95,12 +85,29 @@ function receivedMessage(event, context, num_message, reset) {
     }
 
     else {
+      var payload = event.postback.payload;
+    }
+
+
+    // trois cas : soit payload (ci dessous), soit mot clef (le else if avec switch), soit python (le else)
+    if((event.message && event.message.quick_reply)||(event.postback)){
+        buttonCtrl.payloadAnalyser(event,sendCallback, context, num_message, reset);
+    }
+
+
+    else {
         // message texte brute (ie pas un quick_reply)
 
         // If we receive a text message, check to see if it matches any special
         // keywords and send back the corresponding example. Otherwise, call the python script
 
         // initialization
+
+        // if(num_message == 0){
+        //     context.reponses[num_message-1]="Il semble que vous ayiez atteint mes limites :) Un de mes collègues humain va prendre le relais ;) Pouvez-vous lui détailler un peu plus votre problème :) ?"
+        //     pythonCtrl.talkToPython(messageText, context, num_message, senderId, sendCallback,reset);
+        // }
+
         if(num_message == 0 || context.reponses[num_message-1]=="Ce fut un plaisir de vous aider. N'hésitez pas à revenir vers moi si d'aventure vous avez une nouvelle question."){
             introduction = "Bonjour " + context.first_name + " " + context.last_name + ".";
             introduction2 = "Je suis Reddie, votre assistant virtuel :)";
